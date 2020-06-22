@@ -5,6 +5,9 @@
 package com.stelianmorariu.doggo.presentation
 
 import com.stelianmorariu.doggo.BuildConfig
+import com.stelianmorariu.doggo.domain.dagger.DaggerDoggoAppComponent
+import com.stelianmorariu.doggo.domain.dagger.utils.AppInjector
+import com.stelianmorariu.doggo.domain.scheduler.WorkerSchedulerProvider
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import timber.log.Timber
@@ -25,6 +28,16 @@ class DoggoApp : DaggerApplication() {
 
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        TODO("Not yet implemented")
+        val daggerAppComponent = DaggerDoggoAppComponent.builder()
+            .application(this)
+            .schedulerProvider(WorkerSchedulerProvider())
+            .build()
+
+        daggerAppComponent.inject(this)
+
+        AppInjector.init(this)
+
+        return daggerAppComponent
+
     }
 }
