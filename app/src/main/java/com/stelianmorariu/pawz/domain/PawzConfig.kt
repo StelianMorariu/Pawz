@@ -2,12 +2,12 @@
  * Copyright (c) Stelian Morariu 2020.
  */
 
-package com.stelianmorariu.doggo.domain
+package com.stelianmorariu.pawz.domain
 
 /**
  * Use a configuration object to pass different flags and configuration options in the app.
  */
-data class DoggoConfig(
+data class PawzConfig(
     val enableLogs: Boolean,
     val dogApiUrl: String
 ) {

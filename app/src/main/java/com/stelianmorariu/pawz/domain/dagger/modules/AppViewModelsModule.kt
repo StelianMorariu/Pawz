@@ -2,11 +2,11 @@
  * Copyright (c) Stelian Morariu 2020.
  */
 
-package com.stelianmorariu.doggo.domain.dagger.modules
+package com.stelianmorariu.pawz.domain.dagger.modules
 
 
 import androidx.lifecycle.ViewModelProvider
-import com.stelianmorariu.doggo.domain.dagger.DoggoViewModelFactory
+import com.stelianmorariu.pawz.domain.dagger.PawzViewModelFactory
 import dagger.Binds
 import dagger.Module
 
@@ -22,6 +22,6 @@ abstract class AppViewModelsModule {
 
 
     @Binds
-    abstract fun bindViewModelFactory(factory: DoggoViewModelFactory): ViewModelProvider.Factory
+    abstract fun bindViewModelFactory(factory: PawzViewModelFactory): ViewModelProvider.Factory
 
 }

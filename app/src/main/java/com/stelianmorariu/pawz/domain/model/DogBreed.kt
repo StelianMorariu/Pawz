@@ -2,7 +2,7 @@
  * Copyright (c) Stelian Morariu 2020.
  */
 
-package com.stelianmorariu.doggo.domain.model
+package com.stelianmorariu.pawz.domain.model
 
 /**
  * Our domain model represents the source of truth for the  presentation layer.

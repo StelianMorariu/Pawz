@@ -2,13 +2,13 @@
  * Copyright (c) Stelian Morariu 2020.
  */
 
-package com.stelianmorariu.doggo.domain.dagger.modules
+package com.stelianmorariu.pawz.domain.dagger.modules
 
 import android.app.Application
 import android.content.Context
-import com.stelianmorariu.doggo.BuildConfig
-import com.stelianmorariu.doggo.data.network.DogApiService
-import com.stelianmorariu.doggo.domain.DoggoConfig
+import com.stelianmorariu.pawz.BuildConfig
+import com.stelianmorariu.pawz.data.network.DogApiService
+import com.stelianmorariu.pawz.domain.PawzConfig
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -21,7 +21,7 @@ import javax.inject.Singleton
  * This module is responsible for creating the dependencies the `app` module needs to provide.
  */
 @Module
-class DoggoAppModule {
+class PawzAppModule {
 
 
     /**
@@ -33,12 +33,12 @@ class DoggoAppModule {
 
 
     /**
-     * Provide a [DoggoConfig] object across the whole app.
+     * Provide a [PawzConfig] object across the whole app.
      */
     @Provides
     @Singleton
-    fun provideConfiguration(): DoggoConfig =
-        DoggoConfig(BuildConfig.LOGS_ENABLED, BuildConfig.DOG_API_URL)
+    fun provideConfiguration(): PawzConfig =
+        PawzConfig(BuildConfig.LOGS_ENABLED, BuildConfig.DOG_API_URL)
 
 
     @Provides
@@ -47,7 +47,7 @@ class DoggoAppModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(config: DoggoConfig, client: OkHttpClient) =
+    fun provideRetrofit(config: PawzConfig, client: OkHttpClient) =
         Retrofit.Builder()
             .baseUrl(config.getSafeUrl())
             .client(client)
@@ -66,7 +66,7 @@ class DoggoAppModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitLoggingInterceptor(config: DoggoConfig) =
+    fun provideRetrofitLoggingInterceptor(config: PawzConfig) =
         HttpLoggingInterceptor().apply {
             level = if (config.enableLogs) {
                 HttpLoggingInterceptor.Level.BODY

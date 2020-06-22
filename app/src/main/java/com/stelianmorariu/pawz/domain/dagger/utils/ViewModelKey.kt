@@ -2,7 +2,7 @@
  * Copyright (c) Stelian Morariu 2020.
  */
 
-package com.stelianmorariu.doggo.domain.dagger.utils
+package com.stelianmorariu.pawz.domain.dagger.utils
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

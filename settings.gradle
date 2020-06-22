@@ -3,4 +3,4 @@
  */
 
 include ':app'
-rootProject.name = "Doggo"
+rootProject.name = "Pawz"

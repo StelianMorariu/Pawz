@@ -2,9 +2,9 @@
  * Copyright (c) Stelian Morariu 2020.
  */
 
-package com.stelianmorariu.doggo.domain.dagger.modules
+package com.stelianmorariu.pawz.domain.dagger.modules
 
-import com.stelianmorariu.doggo.presentation.splash.SplashActivity
+import com.stelianmorariu.pawz.presentation.splash.SplashActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

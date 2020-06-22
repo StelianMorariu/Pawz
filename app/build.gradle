@@ -12,7 +12,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.stelianmorariu.doggo"
+        applicationId "com.stelianmorariu.pawz"
 
         versionCode Integer.parseInt(project.property('project.buildnumber'))
         versionName project.property('project.buildversion')

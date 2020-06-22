@@ -2,7 +2,7 @@
  * Copyright (c) Stelian Morariu 2020.
  */
 
-package com.stelianmorariu.doggo.data.network
+package com.stelianmorariu.pawz.data.network
 
 
 import io.reactivex.Single
