@@ -2,7 +2,7 @@
  * Copyright (c) Stelian Morariu 2020.
  */
 
-package com.stelianmorariu.doggo.domain.dagger
+package com.stelianmorariu.doggo.domain.dagger.modules
 
 import android.app.Application
 import android.content.Context
@@ -34,4 +34,6 @@ class DoggoAppModule {
     @Singleton
     fun provideConfiguration(): DoggoConfig =
         DoggoConfig(BuildConfig.LOGS_ENABLED, BuildConfig.DOG_API_URL)
+
+
 }
