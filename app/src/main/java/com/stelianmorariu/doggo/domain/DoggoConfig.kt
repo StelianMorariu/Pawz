@@ -10,16 +10,17 @@ package com.stelianmorariu.doggo.domain
 data class DoggoConfig(
     val enableLogs: Boolean,
     val dogApiUrl: String
-)
-
-/**
- * The API URL needs to end with a backslash(`/`).
- *
- * This function checks the above condition and adds the required backslash if necessary.
- */
-fun DoggoConfig.getSafeUrl(): String {
-    return if (this.dogApiUrl.endsWith("/"))
-        this.dogApiUrl
-    else
-        "${this.dogApiUrl}/"
+) {
+    /**
+     * The API URL needs to end with a backslash(`/`).
+     *
+     * This function checks the above condition and adds the required backslash if necessary.
+     */
+    fun getSafeUrl(): String {
+        return if (this.dogApiUrl.endsWith("/"))
+            this.dogApiUrl
+        else
+            "${this.dogApiUrl}/"
+    }
 }
+
