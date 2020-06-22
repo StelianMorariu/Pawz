@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Stelian Morariu 2020.
+  -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.stelianmorariu.doggo">
+    package="com.stelianmorariu.pawz">
 
     <application
         android:allowBackup="true"
@@ -10,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".presentation.splash.SplashActivity"
+        <activity
+            android:name=".presentation.splash.SplashActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait">
             <intent-filter>

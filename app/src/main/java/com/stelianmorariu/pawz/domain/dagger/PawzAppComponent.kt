@@ -2,15 +2,15 @@
  * Copyright (c) Stelian Morariu 2020.
  */
 
-package com.stelianmorariu.doggo.domain.dagger
+package com.stelianmorariu.pawz.domain.dagger
 
 import android.app.Application
-import com.stelianmorariu.doggo.domain.DoggoConfig
-import com.stelianmorariu.doggo.domain.dagger.modules.AppActivityContributorModule
-import com.stelianmorariu.doggo.domain.dagger.modules.AppViewModelsModule
-import com.stelianmorariu.doggo.domain.dagger.modules.DoggoAppModule
-import com.stelianmorariu.doggo.domain.scheduler.SchedulersProvider
-import com.stelianmorariu.doggo.presentation.DoggoApp
+import com.stelianmorariu.pawz.domain.PawzConfig
+import com.stelianmorariu.pawz.domain.dagger.modules.AppActivityContributorModule
+import com.stelianmorariu.pawz.domain.dagger.modules.AppViewModelsModule
+import com.stelianmorariu.pawz.domain.dagger.modules.PawzAppModule
+import com.stelianmorariu.pawz.domain.scheduler.SchedulersProvider
+import com.stelianmorariu.pawz.presentation.PawzApp
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -23,19 +23,19 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [
-        DoggoAppModule::class,
+        PawzAppModule::class,
         AppViewModelsModule::class,
         AppActivityContributorModule::class,
         AndroidInjectionModule::class,
         AndroidSupportInjectionModule::class]
 )
-interface DoggoAppComponent : AndroidInjector<DaggerApplication> {
+interface PawzAppComponent : AndroidInjector<DaggerApplication> {
 
-    fun inject(app: DoggoApp)
+    fun inject(app: PawzApp)
 
     fun schedulers(): SchedulersProvider
 
-    fun configuration(): DoggoConfig
+    fun configuration(): PawzConfig
 
 
     /**
@@ -49,13 +49,13 @@ interface DoggoAppComponent : AndroidInjector<DaggerApplication> {
     interface Builder {
 
         @BindsInstance
-        fun application(application: Application): DoggoAppComponent.Builder
+        fun application(application: Application): PawzAppComponent.Builder
 
         @BindsInstance
-        fun schedulerProvider(schedulersProvider: SchedulersProvider): DoggoAppComponent.Builder
+        fun schedulerProvider(schedulersProvider: SchedulersProvider): PawzAppComponent.Builder
 
 
-        fun build(): DoggoAppComponent
+        fun build(): PawzAppComponent
     }
 
 }

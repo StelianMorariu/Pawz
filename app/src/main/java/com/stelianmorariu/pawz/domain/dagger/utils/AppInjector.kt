@@ -2,7 +2,7 @@
  * Copyright (c) Stelian Morariu 2020.
  */
 
-package com.stelianmorariu.doggo.domain.dagger.utils
+package com.stelianmorariu.pawz.domain.dagger.utils
 
 import android.app.Activity
 import android.app.Application
@@ -10,7 +10,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import com.stelianmorariu.doggo.presentation.DoggoApp
+import com.stelianmorariu.pawz.presentation.PawzApp
 
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
@@ -20,7 +20,7 @@ import dagger.android.support.AndroidSupportInjection
  * Helper class to automatically inject Activities and Fragments.
  */
 object AppInjector {
-    fun init(app: DoggoApp) {
+    fun init(app: PawzApp) {
         app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 handleActivity(

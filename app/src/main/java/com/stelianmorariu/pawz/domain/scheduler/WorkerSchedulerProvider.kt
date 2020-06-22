@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Stelian Morariu 2020.
  */
-package com.stelianmorariu.doggo.domain.scheduler
+package com.stelianmorariu.pawz.domain.scheduler
 
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
