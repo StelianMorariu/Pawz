@@ -6,6 +6,8 @@ package com.stelianmorariu.doggo.domain.dagger
 
 import android.app.Application
 import android.content.Context
+import com.stelianmorariu.doggo.BuildConfig
+import com.stelianmorariu.doggo.domain.DoggoConfig
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -25,4 +27,11 @@ class DoggoAppModule {
     fun provideContext(app: Application) = app.applicationContext
 
 
+    /**
+     * Provide a [DoggoConfig] object across the whole app.
+     */
+    @Provides
+    @Singleton
+    fun provideConfiguration(): DoggoConfig =
+        DoggoConfig(BuildConfig.LOGS_ENABLED, BuildConfig.DOG_API_URL)
 }
