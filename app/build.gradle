@@ -24,9 +24,14 @@ android {
 
         debug{
             buildConfigField "Boolean", "LOGS_ENABLED", project.property('project.logsEnabled')
+            buildConfigField "String", "DOG_API_URL", project.property('project.dogApiUrl')
         }
 
         release {
+            // copy build config fields from debug
+            initWith debug
+            debuggable = false
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
