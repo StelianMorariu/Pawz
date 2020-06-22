@@ -28,4 +28,8 @@ data class DogBreedListDto(
     @SerializedName("message")
     val breedDtoMap: Map<String, List<String>>,
     val status: String
-)
+) {
+    companion object {
+        const val STATUS_SUCCESS = "success"
+    }
+}
