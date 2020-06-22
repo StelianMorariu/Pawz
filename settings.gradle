@@ -1,0 +1,6 @@
+/*
+ * Copyright (c) Stelian Morariu 2020.
+ */
+
+include ':app'
+rootProject.name = "Doggo"
