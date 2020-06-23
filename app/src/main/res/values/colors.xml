@@ -4,7 +4,14 @@
   -->
 
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="orange_50">#fff3e0</color>
+    <color name="amber_50">#fff8e1</color>
+
+    <color name="brown_200">#bcaaa4</color>
+    <color name="light_orange_50">#ffddc1</color>
+
+    <color name="grey_700">#616161</color>
+    <color name="red_700">#d32f2f</color>
+
+
 </resources>
