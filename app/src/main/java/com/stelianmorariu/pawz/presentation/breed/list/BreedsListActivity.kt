@@ -11,18 +11,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.stelianmorariu.pawz.databinding.ActivityBreedsListBinding
 import com.stelianmorariu.pawz.domain.dagger.utils.Injectable
+import com.stelianmorariu.pawz.domain.model.DogBreed
+import com.stelianmorariu.pawz.presentation.common.SimpleItemClickListener
 import javax.inject.Inject
 
 
-class BreedsListActivity : AppCompatActivity(), Injectable {
+class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListener<DogBreed> {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var binding: ActivityBreedsListBinding
-    private var breedsAdapter = BreedListAdapter()
+    private var breedsAdapter = BreedListAdapter(this)
 
     private val viewModel by lazy {
         ViewModelProvider(this, viewModelFactory).get(BreedListViewModel::class.java)
@@ -44,6 +47,14 @@ class BreedsListActivity : AppCompatActivity(), Injectable {
     override fun onStart() {
         super.onStart()
         viewModel.loadDataIfNecessary()
+    }
+
+    /**
+     * Called when the user taps a breed.
+     */
+    override fun onItemClicked(item: DogBreed) {
+        // todo: this will navigate to breed image gallery
+        Snackbar.make(binding.root, "Tapped on ${item.displayName}", Snackbar.LENGTH_SHORT).show()
     }
 
     private fun updateUiState(viewState: BreedListViewState) {
@@ -85,4 +96,5 @@ class BreedsListActivity : AppCompatActivity(), Injectable {
         }
 
     }
+
 }

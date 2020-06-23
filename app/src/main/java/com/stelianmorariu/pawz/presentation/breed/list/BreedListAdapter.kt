@@ -4,14 +4,17 @@
 
 package com.stelianmorariu.pawz.presentation.breed.list
 
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.stelianmorariu.pawz.databinding.ListItemBreedBinding
 import com.stelianmorariu.pawz.domain.model.DogBreed
+import com.stelianmorariu.pawz.presentation.common.SimpleItemClickListener
 
-class BreedListAdapter : RecyclerView.Adapter<BreedListAdapter.BreedViewHolder>() {
+class BreedListAdapter(private val itemClickListener: SimpleItemClickListener<DogBreed>) :
+    RecyclerView.Adapter<BreedListAdapter.BreedViewHolder>() {
 
     private val items: MutableList<DogBreed> = mutableListOf()
 
@@ -30,7 +33,7 @@ class BreedListAdapter : RecyclerView.Adapter<BreedListAdapter.BreedViewHolder>(
     }
 
     override fun onBindViewHolder(holder: BreedViewHolder, position: Int) {
-        holder.bind(items.get(position))
+        holder.bind(items[position], itemClickListener)
     }
 
     fun setItems(breeds: List<DogBreed>) {
@@ -44,8 +47,13 @@ class BreedListAdapter : RecyclerView.Adapter<BreedListAdapter.BreedViewHolder>(
 
     class BreedViewHolder(private val itemBreedBinding: ListItemBreedBinding) :
         RecyclerView.ViewHolder(itemBreedBinding.root) {
-        fun bind(item: DogBreed) {
+
+        fun bind(item: DogBreed, itemClickListener: SimpleItemClickListener<DogBreed>) {
             itemBreedBinding.breedNameTv.text = item.displayName
+            itemBreedBinding.root.setOnClickListener { v ->
+                v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                itemClickListener.onItemClicked(item)
+            }
         }
     }
 
@@ -66,4 +74,6 @@ class BreedListAdapter : RecyclerView.Adapter<BreedListAdapter.BreedViewHolder>(
             oldList[oldItemPosition] == newList[newItemPosition]
 
     }
+
+
 }
