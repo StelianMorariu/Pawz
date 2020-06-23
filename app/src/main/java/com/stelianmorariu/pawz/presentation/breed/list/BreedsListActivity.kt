@@ -4,6 +4,8 @@
 
 package com.stelianmorariu.pawz.presentation.breed.list
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -39,8 +41,34 @@ class BreedsListActivity : AppCompatActivity(), Injectable {
         })
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.loadDataIfNecessary()
+    }
+
     private fun updateUiState(viewState: BreedListViewState) {
-        TODO("Not yet implemented")
+        when (viewState) {
+            is ErrorState -> renderErrorState(viewState)
+            is EmptyState -> renderEmptyState()
+            is LoadingState -> renderLoadingState()
+            is DisplayBreedsState -> renderBreedsList(viewState)
+        }
+    }
+
+    private fun renderBreedsList(viewState: DisplayBreedsState) {
+        breedsAdapter.setItems(viewState.breeds)
+    }
+
+    private fun renderLoadingState() {
+
+    }
+
+    private fun renderEmptyState() {
+
+    }
+
+    private fun renderErrorState(viewState: ErrorState) {
+
     }
 
     private fun initRecyclerView() {
@@ -48,5 +76,13 @@ class BreedsListActivity : AppCompatActivity(), Injectable {
             layoutManager = LinearLayoutManager(context)
             adapter = breedsAdapter
         }
+    }
+
+    companion object {
+
+        fun newIntent(context: Context): Intent {
+            return Intent(context, BreedsListActivity::class.java)
+        }
+
     }
 }
