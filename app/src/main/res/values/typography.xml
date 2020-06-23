@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) Stelian Morariu 2020.
+  -->
+
+<resources>
+
+
+    <style name="TextAppearance.Pawz.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="fontFamily">@font/underdog</item>
+        <item name="android:fontFamily">@font/underdog</item>
+        <item name="android:textSize">98sp</item>
+    </style>
+
+    <style name="TextAppearance.Pawz.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="fontFamily">@font/underdog</item>
+        <item name="android:fontFamily">@font/underdog</item>
+        <item name="android:textSize">61sp</item>
+    </style>
+
+    <style name="TextAppearance.Pawz.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="fontFamily">@font/underdog</item>
+        <item name="android:fontFamily">@font/underdog</item>
+        <item name="android:textSize">49sp</item>
+    </style>
+
+    <style name="TextAppearance.Pawz.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/underdog</item>
+        <item name="android:fontFamily">@font/underdog</item>
+        <item name="android:textSize">35sp</item>
+    </style>
+
+    <style name="TextAppearance.Pawz.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/underdog</item>
+        <item name="android:fontFamily">@font/underdog</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="TextAppearance.Pawz.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/underdog</item>
+        <item name="android:fontFamily">@font/underdog</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextAppearance.Pawz.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/underdog</item>
+        <item name="android:fontFamily">@font/underdog</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextAppearance.Pawz.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="fontFamily">@font/underdog</item>
+        <item name="android:fontFamily">@font/underdog</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.Pawz.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/jura_regular</item>
+        <item name="android:fontFamily">@font/jura_regular</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextAppearance.Pawz.Body2" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/jura_regular</item>
+        <item name="android:fontFamily">@font/jura_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextAppearance.Pawz.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/jura_medium</item>
+        <item name="android:fontFamily">@font/jura_medium</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextAppearance.Pawz.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/jura_regular</item>
+        <item name="android:fontFamily">@font/jura_regular</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="TextAppearance.Pawz.Overline" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="fontFamily">@font/jura_regular</item>
+        <item name="android:fontFamily">@font/jura_regular</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+</resources>
