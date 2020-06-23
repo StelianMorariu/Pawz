@@ -12,7 +12,6 @@ import javax.inject.Provider
 import javax.inject.Singleton
 
 /**
- * Custom ViewModel factory for Blink+.
  *
  * This factory will be able to inject all ViewModels used in the app.
  */
