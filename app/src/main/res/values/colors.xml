@@ -11,7 +11,16 @@
     <color name="light_orange_50">#ffddc1</color>
 
     <color name="grey_700">#616161</color>
+    <color name="grey_75">#BF000000</color>
     <color name="red_700">#d32f2f</color>
+
+    <!-- New Colour themes -->
+    <color name="orange_800">#EF6C00</color>
+    <color name="orange_400">#FFA726</color>
+
+
+    <color name="light_blue_50">#E7F3FB</color>
+    <color name="light_cyan_50">#FFE0F7FA</color>
 
 
 </resources>

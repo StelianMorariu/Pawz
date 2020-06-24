@@ -5,27 +5,19 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-
     <!-- Base application theme. -->
     <style name="Pawz.DayNight" parent="Base.Pawz">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
 
-        <item name="android:statusBarColor">@color/light_orange_50</item>
-        <!--        <item name="android:navigationBarColor">@color/grey_lighter</item>-->
-
-        <!--        <item name="android:windowBackground">@color/grey_lighter</item>-->
     </style>
 
     <!--Base custom theme which will be shared between both light and dark theme variants-->
     <style name="Base.Pawz" parent="Base.MaterialThemeBuilder">
 
-        <!--Material color attributes (light theme) -->
-        <!--colorPrimary colors map to components and elements, such as app bars and buttons. -->
-        <!--colorSecondary colors are most often used as accents on components, such as FABs and -->
-        <!--selection controls.-->
-        <item name="colorPrimary">@color/light_orange_50</item>
-        <item name="colorPrimaryVariant">@color/brown_200</item>
+
+        <item name="colorPrimary">@color/orange_400</item>
+        <item name="colorPrimaryVariant">@color/orange_800</item>
 
         <!--        <item name="colorSecondary">@color/amber_50</item>-->
         <!--        <item name="colorSecondaryVariant">@color/orange_50</item>-->
@@ -34,17 +26,17 @@
         <!--background. colorSurface is mapped to the surface of components such as cards, sheets-->
         <!--and menus. colorError is used to indicate an error state for components such as-->
         <!--text fields.-->
-        <item name="android:colorBackground">@color/orange_50</item>
-        <item name="colorSurface">@color/orange_50</item>
+        <item name="android:colorBackground">@color/light_blue_50</item>
+        <item name="colorSurface">@color/light_blue_50</item>
         <item name="colorError">@color/red_700</item>
 
         <!--"On" colors define how text, icons and strokes are colored in relation to the surface-->
         <!--on which they appear.-->
-        <item name="colorOnPrimary">@color/grey_700</item>
-        <item name="colorOnSecondary">@color/grey_700</item>
-        <item name="colorOnBackground">@color/grey_700</item>
-        <item name="colorOnSurface">@color/grey_700</item>
-        <item name="colorOnError">@color/grey_700</item>
+        <item name="colorOnPrimary">@color/grey_75</item>
+        <item name="colorOnSecondary">@color/grey_75</item>
+        <item name="colorOnBackground">@color/grey_75</item>
+        <item name="colorOnSurface">@color/grey_75</item>
+        <item name="colorOnError">@color/grey_75</item>
 
 
         <!--Material type attributes-->
