@@ -7,7 +7,7 @@
 
     <!-- Base application theme. -->
     <style name="Pawz.DayNight" parent="Base.Pawz">
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
 
     </style>
@@ -32,7 +32,7 @@
 
         <!--"On" colors define how text, icons and strokes are colored in relation to the surface-->
         <!--on which they appear.-->
-        <item name="colorOnPrimary">@color/grey_75</item>
+        <item name="colorOnPrimary">@color/white</item>
         <item name="colorOnSecondary">@color/grey_75</item>
         <item name="colorOnBackground">@color/grey_75</item>
         <item name="colorOnSurface">@color/grey_75</item>

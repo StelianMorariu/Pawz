@@ -29,6 +29,7 @@
         android:textAppearance="?textAppearanceHeadline2"
         android:transformPivotX="0sp"
         android:transformPivotY="30sp"
+        android:textColor="?colorOnPrimary"
         app:layout_constraintBottom_toBottomOf="@id/frameLayout"
         app:layout_constraintEnd_toStartOf="@+id/titleLogoIv"
         app:layout_constraintHorizontal_chainStyle="packed"
