@@ -4,4 +4,14 @@
 
 <resources>
     <string name="app_name">Pawz</string>
+
+    <!--    Image View Content descriptions-->
+    <string name="cd_faulty_state_image">dog image</string>
+
+
+    <!-- Error state messages -->
+    <string name="err_empty_state_msg">Looks like we can\'t find what you\'re looking for</string>
+    <string name="err_default_msg">There was a problem with your request</string>
+    <string name="err_no_internet_msg">There seems to be a problem with your internet connection</string>
+
 </resources>
