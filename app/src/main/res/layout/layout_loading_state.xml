@@ -20,7 +20,7 @@
         app:srcCompat="@drawable/avd_loading" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/errorMessageTv"
+        android:id="@+id/loadingMessageTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_margin"
