@@ -7,6 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:applyMotionScene="true"
     app:layoutDescription="@xml/activity_breeds_list_scene"
     tools:context=".presentation.breed.list.BreedsListActivity">
 
@@ -27,9 +28,9 @@
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:textAppearance="?textAppearanceHeadline2"
+        android:textColor="?colorOnPrimary"
         android:transformPivotX="0sp"
         android:transformPivotY="30sp"
-        android:textColor="?colorOnPrimary"
         app:layout_constraintBottom_toBottomOf="@id/frameLayout"
         app:layout_constraintEnd_toStartOf="@+id/titleLogoIv"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -70,6 +71,28 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="28dp" />
+
+    <include
+        android:id="@+id/loadingLayout"
+        layout="@layout/layout_loading_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <include
+        android:id="@+id/errorLayout"
+        layout="@layout/layout_faulty_state_baseline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
