@@ -6,9 +6,14 @@ package com.stelianmorariu.pawz.presentation.breed.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.stelianmorariu.pawz.domain.errors.PawzGenericError
+import com.stelianmorariu.pawz.domain.errors.PawzNoDataError
+import com.stelianmorariu.pawz.domain.errors.PawzNoInternetError
+import com.stelianmorariu.pawz.domain.errors.PawzParsingError
 import com.stelianmorariu.pawz.domain.repositories.DogBreedRepository
 import com.stelianmorariu.pawz.domain.scheduler.SchedulersProvider
 import com.stelianmorariu.pawz.presentation.common.BaseViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 class BreedListViewModel @Inject constructor(
@@ -19,14 +24,11 @@ class BreedListViewModel @Inject constructor(
     val viewState: LiveData<BreedListViewState>
         get() = _viewState
 
-    private val _viewState: MutableLiveData<BreedListViewState> = MutableLiveData()
-
-    init {
-        _viewState.postValue(LoadingState)
-    }
+    private val _viewState: MutableLiveData<BreedListViewState> = MutableLiveData(Default)
 
     fun loadDataIfNecessary() {
-        if (_viewState.value != DisplayBreedsState::class) {
+        if (_viewState.value is Default) {
+            Timber.e("Downloading breeds")
             compositeDisposable.add(
                 breedsRepository.getAllBreeds()
                     .subscribeOn(schedulersProvider.io())
@@ -34,17 +36,26 @@ class BreedListViewModel @Inject constructor(
                     .subscribe { breedList, error ->
                         if (error != null) {
                             // check error type if there are multiple types
-                            _viewState.postValue(ErrorState)
-                        }
-
-                        if (breedList.isNullOrEmpty()) {
-                            _viewState.postValue(EmptyState)
+                            handleError(error)
                         } else {
+                            // list content is checked at repository level and a PawzNoDataError
+                            // is thrown if there are no breeds
                             _viewState.postValue(DisplayBreedsState(breedList))
                         }
                     }
             )
         }
+    }
+
+    private fun handleError(error: Throwable) {
+        val state: BreedListViewState = when (error) {
+            is PawzNoDataError -> ErrorState(error)
+            is PawzNoInternetError -> ErrorState(error)
+            is PawzParsingError -> ErrorState(error)
+            else -> ErrorState(PawzGenericError(error.localizedMessage ?: ""))
+        }
+
+        _viewState.postValue(state)
     }
 
 }

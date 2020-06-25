@@ -4,6 +4,7 @@
 
 package com.stelianmorariu.pawz.presentation.breed.list
 
+import com.stelianmorariu.pawz.domain.errors.PawzError
 import com.stelianmorariu.pawz.domain.model.DogBreed
 
 /**
@@ -11,10 +12,13 @@ import com.stelianmorariu.pawz.domain.model.DogBreed
  */
 sealed class BreedListViewState
 
+object Default : BreedListViewState()
+
 data class DisplayBreedsState(val breeds: List<DogBreed>) : BreedListViewState()
 
 object LoadingState : BreedListViewState()
 
-object EmptyState : BreedListViewState()
-
-object ErrorState : BreedListViewState()
+/**
+ * Empty state is considered an error and is represented by [PawzNoDataError].
+ */
+data class ErrorState(val pawzError: PawzError) : BreedListViewState()
