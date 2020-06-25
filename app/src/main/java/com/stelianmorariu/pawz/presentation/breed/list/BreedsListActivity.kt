@@ -6,12 +6,18 @@ package com.stelianmorariu.pawz.presentation.breed.list
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Animatable
+import android.graphics.drawable.Animatable2
+import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import com.stelianmorariu.pawz.R
 import com.stelianmorariu.pawz.databinding.ActivityBreedsListBinding
 import com.stelianmorariu.pawz.domain.dagger.utils.Injectable
 import com.stelianmorariu.pawz.domain.model.DogBreed
@@ -31,11 +37,15 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
         ViewModelProvider(this, viewModelFactory).get(BreedListViewModel::class.java)
     }
 
+    private var loadingAnimation: AnimatedVectorDrawable? = null
+    private var loading = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityBreedsListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         initRecyclerView()
 
@@ -58,28 +68,51 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
     }
 
     private fun updateUiState(viewState: BreedListViewState) {
+        stopAnimation()
         when (viewState) {
             is ErrorState -> renderErrorState(viewState)
-            is EmptyState -> renderEmptyState()
             is LoadingState -> renderLoadingState()
             is DisplayBreedsState -> renderBreedsList(viewState)
         }
     }
 
     private fun renderBreedsList(viewState: DisplayBreedsState) {
+        binding.root.transitionToState(R.id.breed_list_state_expanded)
         breedsAdapter.setItems(viewState.breeds)
     }
 
     private fun renderLoadingState() {
-
+        loading = true
+        binding.root.transitionToState(R.id.breed_list_state_loading)
+        loadingAnimation = binding.loadingLayout.loadingIv.drawable as AnimatedVectorDrawable
+        startAnimating()
     }
 
-    private fun renderEmptyState() {
+    private fun startAnimating() {
+        loadingAnimation?.registerAnimationCallback(object : Animatable2.AnimationCallback() {
+            override fun onAnimationEnd(drawable: Drawable?) {
+                if (loading) {
+                    (drawable as Animatable).start()
+                }
+            }
+        })
 
+        loadingAnimation?.start()
+    }
+
+    private fun stopAnimation() {
+        loadingAnimation?.stop()
     }
 
     private fun renderErrorState(viewState: ErrorState) {
+        binding.root.transitionToState(R.id.breed_list_state_error)
 
+        Glide.with(this)
+            .load(viewState.pawzError.imageId)
+            .into(binding.errorLayout.imageView)
+
+        binding.errorLayout.errorMessageTv.text =
+            getString(viewState.pawzError.localizedDisplayMessageResId)
     }
 
     private fun initRecyclerView() {
@@ -96,5 +129,4 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
         }
 
     }
-
 }
