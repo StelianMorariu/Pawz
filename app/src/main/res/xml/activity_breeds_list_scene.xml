@@ -165,12 +165,11 @@
         <Constraint
             android:id="@+id/errorLayout"
             android:visibility="invisible"
-            motion:visibilityMode="ignore" />
+           />
 
         <Constraint
             android:id="@+id/loadingLayout"
-            android:visibility="invisible"
-            motion:visibilityMode="ignore" />
+            android:visibility="invisible" />
     </ConstraintSet>
 
     <!-- Loading state-->
