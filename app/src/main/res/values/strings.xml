@@ -14,5 +14,6 @@
     <string name="err_default_msg">There was a problem with your request</string>
     <string name="err_no_internet_msg">There seems to be a problem with your internet connection</string>
     <string name="err_parsing_msg">We don\'t understand what the server sent</string>
+    <string name="lbl_fetching">Fetching...</string>
 
 </resources>
