@@ -17,7 +17,13 @@ class DogBreedRepository @Inject constructor(private val dogApiService: DogApiSe
     fun getAllBreeds(): Single<List<DogBreed>> =
         dogApiService.getAllBreads().flatMap {
             if (it.status == DogBreedListDto.STATUS_SUCCESS) {
-                Single.just(it.toDomainModel())
+                val mapped = it.toDomainModel()
+
+                if (mapped.isNullOrEmpty()) {
+                    Single.error(PawzNoDataError("failed mapping items"))
+                } else {
+                    Single.just(mapped)
+                }
             } else {
                 Single.error(PawzNoDataError(it.status))
             }
