@@ -39,6 +39,17 @@ class PawzNoDataError(
 )
 
 /**
+ * Error used when we can't reach the server.
+ */
+class PawzServerError(
+    override val message: String
+) : PawzError(
+    message, R.drawable.ic_dog_digging,
+    R.string.err_server_error_msg
+)
+
+
+/**
  * Error used for empty state situations.
  */
 class PawzParsingError(
