@@ -12,12 +12,13 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="@dimen/state_layout_image_width"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/state_layout_image_width"
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
         android:contentDescription="@string/cd_faulty_state_image"
-        tools:srcCompat="@drawable/ic_dog_digging" />
+        android:scaleType="fitEnd"
+        tools:srcCompat="@drawable/ic_dog_sad" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/errorMessageTv"
@@ -27,7 +28,7 @@
         android:layout_marginEnd="@dimen/default_margin"
         android:gravity="center"
         android:padding="@dimen/default_padding"
-        android:textAppearance="@style/TextAppearance.Pawz.Headline5"
+        android:textAppearance="@style/TextAppearance.Pawz.Headline6"
         android:textColor="?colorOnSurface"
         tools:text="@string/err_empty_state_msg" />
 
