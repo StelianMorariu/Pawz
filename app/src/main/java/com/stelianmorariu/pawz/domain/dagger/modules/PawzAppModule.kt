@@ -9,12 +9,13 @@ import android.content.Context
 import com.stelianmorariu.pawz.BuildConfig
 import com.stelianmorariu.pawz.data.network.DogApiService
 import com.stelianmorariu.pawz.domain.PawzConfig
+import com.stelianmorariu.pawz.domain.retrofit.PawzCallAdapterFactory
+import com.stelianmorariu.pawz.domain.retrofit.PawzConnectionChecker
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
@@ -48,22 +49,28 @@ class PawzAppModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(config: PawzConfig, client: OkHttpClient) =
+    fun provideRetrofit(
+        config: PawzConfig,
+        client: OkHttpClient,
+        callAdapterFactory: PawzCallAdapterFactory
+    ) =
         Retrofit.Builder()
             .baseUrl(config.getSafeUrl())
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addCallAdapterFactory(callAdapterFactory)
             .build()
-
 
     @Provides
     @Singleton
-    fun provideRetrofitClient(loggingInterceptor: HttpLoggingInterceptor) =
+    fun provideRetrofitClient(
+        loggingInterceptor: HttpLoggingInterceptor
+    ) =
         OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             // add timeouts or certificate pinner
             .build()
+
 
     @Provides
     @Singleton
@@ -75,4 +82,14 @@ class PawzAppModule {
                 HttpLoggingInterceptor.Level.NONE
             }
         }
+
+    @Provides
+    @Singleton
+    fun provideConnectivityChecker(context: Context) = PawzConnectionChecker(context)
+
+    @Provides
+    @Singleton
+    fun providePawzCallAdapterFactory(pawzConnectionChecker: PawzConnectionChecker) =
+        PawzCallAdapterFactory(pawzConnectionChecker)
+
 }
