@@ -11,6 +11,8 @@ import android.graphics.drawable.Animatable2
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.view.View.OVER_SCROLL_NEVER
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -22,6 +24,7 @@ import com.stelianmorariu.pawz.databinding.ActivityBreedsListBinding
 import com.stelianmorariu.pawz.domain.dagger.utils.Injectable
 import com.stelianmorariu.pawz.domain.model.DogBreed
 import com.stelianmorariu.pawz.presentation.common.SimpleItemClickListener
+import com.stelianmorariu.pawz.presentation.common.widgets.StackUpListItemAnimator
 import javax.inject.Inject
 
 
@@ -116,9 +119,14 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
     }
 
     private fun initRecyclerView() {
+        val metrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(metrics)
+
         binding.breedsRecyclerView.apply {
+            itemAnimator = StackUpListItemAnimator(context, metrics.heightPixels)
             layoutManager = LinearLayoutManager(context)
             adapter = breedsAdapter
+            overScrollMode = OVER_SCROLL_NEVER
         }
     }
 
