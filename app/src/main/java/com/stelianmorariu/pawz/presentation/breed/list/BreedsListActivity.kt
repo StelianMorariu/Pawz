@@ -17,13 +17,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.stelianmorariu.pawz.R
 import com.stelianmorariu.pawz.databinding.ActivityBreedsListBinding
 import com.stelianmorariu.pawz.domain.dagger.utils.Injectable
 import com.stelianmorariu.pawz.domain.model.DogBreed
 import com.stelianmorariu.pawz.presentation.common.SimpleItemClickListener
+import com.stelianmorariu.pawz.presentation.common.loadImage
 import com.stelianmorariu.pawz.presentation.common.widgets.StackUpListItemAnimator
 import javax.inject.Inject
 
@@ -110,10 +110,7 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
     private fun renderErrorState(viewState: ErrorState) {
         binding.root.transitionToState(R.id.breed_list_state_error)
 
-        Glide.with(this)
-            .load(viewState.pawzError.imageId)
-            .into(binding.errorLayout.imageView)
-
+        binding.errorLayout.imageView.loadImage(viewState.pawzError.imageId)
         binding.errorLayout.errorMessageTv.text =
             getString(viewState.pawzError.localizedDisplayMessageResId)
     }
