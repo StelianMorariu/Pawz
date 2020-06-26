@@ -6,10 +6,8 @@ package com.stelianmorariu.pawz.presentation.breed.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.stelianmorariu.pawz.domain.errors.PawzError
 import com.stelianmorariu.pawz.domain.errors.PawzGenericError
-import com.stelianmorariu.pawz.domain.errors.PawzNoDataError
-import com.stelianmorariu.pawz.domain.errors.PawzNoInternetError
-import com.stelianmorariu.pawz.domain.errors.PawzParsingError
 import com.stelianmorariu.pawz.domain.repositories.DogBreedRepository
 import com.stelianmorariu.pawz.domain.scheduler.SchedulersProvider
 import com.stelianmorariu.pawz.presentation.common.BaseViewModel
@@ -48,11 +46,10 @@ class BreedListViewModel @Inject constructor(
     }
 
     private fun handleError(error: Throwable) {
-        val state: BreedListViewState = when (error) {
-            is PawzNoDataError -> ErrorState(error)
-            is PawzNoInternetError -> ErrorState(error)
-            is PawzParsingError -> ErrorState(error)
-            else -> ErrorState(PawzGenericError(error.localizedMessage ?: ""))
+        val state: BreedListViewState = if (error is PawzError) {
+            ErrorState(error)
+        } else {
+            ErrorState(PawzGenericError(error.localizedMessage ?: ""))
         }
 
         _viewState.postValue(state)
