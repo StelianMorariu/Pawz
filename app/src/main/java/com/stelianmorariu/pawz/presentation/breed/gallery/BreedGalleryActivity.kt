@@ -10,15 +10,24 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.stelianmorariu.pawz.databinding.ActivityBreedGalleryBinding
+import com.stelianmorariu.pawz.domain.dagger.utils.Injectable
 import com.stelianmorariu.pawz.domain.model.DogBreed
+import javax.inject.Inject
 
-class BreedGalleryActivity : AppCompatActivity() {
+class BreedGalleryActivity : AppCompatActivity(), Injectable {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var binding: ActivityBreedGalleryBinding
     private lateinit var currentBreed: DogBreed
+
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory).get(BreedGalleryViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

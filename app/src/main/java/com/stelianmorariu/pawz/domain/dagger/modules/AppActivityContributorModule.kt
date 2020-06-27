@@ -4,6 +4,7 @@
 
 package com.stelianmorariu.pawz.domain.dagger.modules
 
+import com.stelianmorariu.pawz.presentation.breed.gallery.BreedGalleryActivity
 import com.stelianmorariu.pawz.presentation.breed.list.BreedsListActivity
 import com.stelianmorariu.pawz.presentation.splash.SplashActivity
 import dagger.Module
@@ -21,5 +22,8 @@ abstract class AppActivityContributorModule {
 
     @ContributesAndroidInjector
     abstract fun contributeBreedListActivity(): BreedsListActivity
+
+    @ContributesAndroidInjector
+    abstract fun contributeBreedGalleryctivity(): BreedGalleryActivity
 
 }
