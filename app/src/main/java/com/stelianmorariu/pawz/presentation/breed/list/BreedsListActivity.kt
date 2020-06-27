@@ -17,11 +17,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.stelianmorariu.pawz.R
 import com.stelianmorariu.pawz.databinding.ActivityBreedsListBinding
 import com.stelianmorariu.pawz.domain.dagger.utils.Injectable
 import com.stelianmorariu.pawz.domain.model.DogBreed
+import com.stelianmorariu.pawz.presentation.breed.gallery.BreedGalleryActivity
 import com.stelianmorariu.pawz.presentation.common.SimpleItemClickListener
 import com.stelianmorariu.pawz.presentation.common.loadImage
 import com.stelianmorariu.pawz.presentation.common.widgets.StackUpListItemAnimator
@@ -43,6 +43,9 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
     private var loadingAnimation: AnimatedVectorDrawable? = null
     private var loading = false
 
+    // limit the number of times we process breed clicks
+    private var canProcessItemClicks = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -62,12 +65,19 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
         viewModel.loadDataIfNecessary()
     }
 
+    override fun onResume() {
+        super.onResume()
+        canProcessItemClicks = true
+    }
+
     /**
      * Called when the user taps a breed.
      */
     override fun onItemClicked(item: DogBreed) {
-        // todo: this will navigate to breed image gallery
-        Snackbar.make(binding.root, "Tapped on ${item.displayName}", Snackbar.LENGTH_SHORT).show()
+        if (canProcessItemClicks) {
+            canProcessItemClicks = false
+            startActivity(BreedGalleryActivity.newIntent(this, item))
+        }
     }
 
     private fun updateUiState(viewState: BreedListViewState) {
