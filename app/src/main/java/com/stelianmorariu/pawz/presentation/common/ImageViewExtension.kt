@@ -22,6 +22,17 @@ fun ImageView.loadImage(url: String?, @DrawableRes placeHolderResId: Int) {
         .into(this)
 }
 
+fun ImageView.loadImageNoCrop(url: String?, @DrawableRes placeHolderResId: Int) {
+    GlideApp.with(this)
+        .load(url)
+        .apply(
+            RequestOptions()
+                .placeholder(placeHolderResId)
+                .error(placeHolderResId)
+                .centerInside()
+        )
+        .into(this)
+}
 
 /**
  * Simple function to load image from a drawable resource.
