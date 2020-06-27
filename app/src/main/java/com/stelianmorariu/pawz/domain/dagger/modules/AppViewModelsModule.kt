@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.stelianmorariu.pawz.domain.dagger.PawzViewModelFactory
 import com.stelianmorariu.pawz.domain.dagger.utils.ViewModelKey
+import com.stelianmorariu.pawz.presentation.breed.gallery.BreedGalleryViewModel
 import com.stelianmorariu.pawz.presentation.breed.list.BreedListViewModel
 import dagger.Binds
 import dagger.Module
@@ -29,6 +30,11 @@ abstract class AppViewModelsModule {
     @IntoMap
     @ViewModelKey(BreedListViewModel::class)
     abstract fun bindBreedListViewModel(breedListViewModel: BreedListViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BreedGalleryViewModel::class)
+    abstract fun bindBreedGalleryViewModel(breedGalleryViewModel: BreedGalleryViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: PawzViewModelFactory): ViewModelProvider.Factory
