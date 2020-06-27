@@ -11,7 +11,6 @@ import com.stelianmorariu.pawz.domain.errors.PawzGenericError
 import com.stelianmorariu.pawz.domain.repositories.DogBreedRepository
 import com.stelianmorariu.pawz.domain.scheduler.SchedulersProvider
 import com.stelianmorariu.pawz.presentation.common.BaseViewModel
-import timber.log.Timber
 import javax.inject.Inject
 
 class BreedListViewModel @Inject constructor(
@@ -26,7 +25,7 @@ class BreedListViewModel @Inject constructor(
 
     fun loadDataIfNecessary() {
         if (_viewState.value is Default) {
-            Timber.e("Downloading breeds")
+           _viewState.postValue(LoadingState)
             compositeDisposable.add(
                 breedsRepository.getAllBreeds()
                     .subscribeOn(schedulersProvider.io())
