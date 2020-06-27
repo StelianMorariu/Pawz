@@ -4,5 +4,9 @@
 
 <resources>
 
+    <style name="PawzToolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:background">?colorPrimaryVariant</item>
+
+    </style>
 
 </resources>
