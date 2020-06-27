@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -22,12 +23,17 @@ import com.stelianmorariu.pawz.R
 import com.stelianmorariu.pawz.databinding.ActivityBreedGalleryBinding
 import com.stelianmorariu.pawz.domain.dagger.utils.Injectable
 import com.stelianmorariu.pawz.domain.model.DogBreed
+import com.stelianmorariu.pawz.presentation.common.SimpleItemClickListener
 import com.stelianmorariu.pawz.presentation.common.loadImage
+import com.stelianmorariu.pawz.presentation.common.loadImageNoCrop
+import com.stelianmorariu.pawz.presentation.common.widgets.GalleryLinearSmoothScroller
 import com.stelianmorariu.pawz.presentation.common.widgets.GridLayoutItemSpaceDecorator
+import com.stfalcon.imageviewer.StfalconImageViewer
 import javax.inject.Inject
 
 
-class BreedGalleryActivity : AppCompatActivity(), Injectable {
+class BreedGalleryActivity : AppCompatActivity(), Injectable,
+    SimpleItemClickListener<Pair<Int, ImageView>> {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -42,7 +48,14 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable {
     private var loadingAnimation: AnimatedVectorDrawable? = null
     private var loading = false
 
-    private var breedGalleryAdaper = BreedGalleryAdapter()
+    private var breedGalleryAdaper = BreedGalleryAdapter(this)
+
+    private var fullscreenImageViewwer: StfalconImageViewer<String>? = null
+
+    private lateinit var smoothScroller: GalleryLinearSmoothScroller
+
+    // limit the number of times we process breed clicks
+    private var canProcessItemClicks = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +69,8 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable {
 
         binding = ActivityBreedGalleryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        smoothScroller = GalleryLinearSmoothScroller(this)
 
         initToolbar()
         initRecyclerView()
@@ -77,6 +92,49 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onItemClicked(positionWithTargetPair: Pair<Int, ImageView>) {
+        if (canProcessItemClicks) {
+            canProcessItemClicks = false
+            showFullScreenImageViewer(positionWithTargetPair)
+        }
+    }
+
+    private fun showFullScreenImageViewer(positionWithTargetPair: Pair<Int, ImageView>) {
+        fullscreenImageViewwer = StfalconImageViewer.Builder<String>(
+            this,
+            breedGalleryAdaper.getItems(),
+            ::loadFullScreenImage
+        )
+            .withStartPosition(positionWithTargetPair.first)
+            .withTransitionFrom(positionWithTargetPair.second)
+            .withImageChangeListener {
+                updateImageViewerAnimationTarget(it)
+            }
+            .withHiddenStatusBar(false)
+            .withDismissListener {
+                canProcessItemClicks = true
+            }
+            .show()
+    }
+
+    private fun updateImageViewerAnimationTarget(targetPosition: Int) {
+        // scroll the list to the target position to make sure we have a target image view
+        smoothScroller.targetPosition = targetPosition
+        val layoutManager = binding.breedImageRecyclerView.layoutManager as GridLayoutManager
+        layoutManager.startSmoothScroll(smoothScroller)
+
+        val targetIv: ImageView =
+            binding.breedImageRecyclerView.layoutManager!!.findViewByPosition(targetPosition) as ImageView
+
+        fullscreenImageViewwer?.updateTransitionImage(targetIv)
+    }
+
+    private fun loadFullScreenImage(imageView: ImageView, imageUrl: String) {
+        imageView.apply {
+            loadImageNoCrop(imageUrl, R.drawable.ic_placeholder)
         }
     }
 
@@ -158,4 +216,5 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable {
             return intent
         }
     }
+
 }

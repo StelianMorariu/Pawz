@@ -4,15 +4,18 @@
 
 package com.stelianmorariu.pawz.presentation.breed.gallery
 
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.stelianmorariu.pawz.R
 import com.stelianmorariu.pawz.databinding.ListItemBreedImageBinding
+import com.stelianmorariu.pawz.presentation.common.SimpleItemClickListener
 import com.stelianmorariu.pawz.presentation.common.loadImage
 
-class BreedGalleryAdapter() :
+class BreedGalleryAdapter(private val itemClickListener: SimpleItemClickListener<Pair<Int, ImageView>>) :
     RecyclerView.Adapter<BreedGalleryAdapter.BreedImageViewHolder>() {
 
     private val items: MutableList<String> = mutableListOf()
@@ -32,7 +35,7 @@ class BreedGalleryAdapter() :
     }
 
     override fun onBindViewHolder(holder: BreedImageViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(items[position], itemClickListener)
     }
 
     fun setItems(breeds: List<String>) {
@@ -43,12 +46,28 @@ class BreedGalleryAdapter() :
         calculateDiff.dispatchUpdatesTo(this)
     }
 
+    fun getItems(): List<String> {
+        return ArrayList(items)
+    }
+
 
     class BreedImageViewHolder(private val itemBreedBinding: ListItemBreedImageBinding) :
         RecyclerView.ViewHolder(itemBreedBinding.root) {
 
-        fun bind(item: String) {
+        fun bind(
+            item: String,
+            itemClickListener: SimpleItemClickListener<Pair<Int, ImageView>>
+        ) {
             itemBreedBinding.breedImageView.loadImage(item, R.drawable.ic_placeholder)
+            itemBreedBinding.breedImageView.setOnClickListener { v ->
+                v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                itemClickListener.onItemClicked(
+                    Pair(
+                        this.adapterPosition,
+                        itemBreedBinding.breedImageView
+                    )
+                )
+            }
 
         }
     }
