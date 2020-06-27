@@ -48,7 +48,7 @@ class BreedGalleryAdapter() :
         RecyclerView.ViewHolder(itemBreedBinding.root) {
 
         fun bind(item: String) {
-            itemBreedBinding.breedImageView.loadImage(item, R.drawable.ic_paw_placeholder)
+            itemBreedBinding.breedImageView.loadImage(item, R.drawable.ic_placeholder)
 
         }
     }
