@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright (c) Stelian Morariu 2020.
   -->
 
@@ -17,7 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/Pawz.DayNight">
 
-
         <activity
             android:name=".presentation.splash.SplashActivity"
             android:noHistory="true"
@@ -27,11 +27,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Locked the screen orientation to save some time dealing with layouts-->
+        </activity> <!-- Locked the screen orientation to save some time dealing with layouts -->
         <activity
             android:name=".presentation.breed.list.BreedsListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".presentation.breed.gallery.BreedGalleryActivity"
             android:screenOrientation="portrait" />
     </application>
 
