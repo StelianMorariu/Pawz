@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) Stelian Morariu 2020.
+  -->
+
+<resources>
+    <integer name="gallery_columns">2</integer>
+</resources>

@@ -12,7 +12,7 @@
     <StateSet>
         <State
             android:id="@+id/breed_gallery_state_default"
-            motion:constraints="@id/cs_breeds_baseline" />
+            motion:constraints="@id/cs_breed_gallery_baseline" />
 
         <State
             android:id="@+id/breed_list_state_error"

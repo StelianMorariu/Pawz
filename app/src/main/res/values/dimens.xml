@@ -9,4 +9,5 @@
     <dimen name="small_paws_icon_size">42dp</dimen>
     <dimen name="loading_iv_size">224dp</dimen>
     <dimen name="state_layout_image_width">224dp</dimen>
+    <dimen name="grid_layout_item_spacing">2dp</dimen>
 </resources>
