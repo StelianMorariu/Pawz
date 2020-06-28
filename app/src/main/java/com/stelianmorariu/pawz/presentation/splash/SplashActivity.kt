@@ -5,18 +5,32 @@
 package com.stelianmorariu.pawz.presentation.splash
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import com.stelianmorariu.pawz.R
+import com.stelianmorariu.pawz.databinding.ActivitySplashBinding
 import com.stelianmorariu.pawz.presentation.breed.list.BreedsListActivity
 
+
 class SplashActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivitySplashBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
+
+        binding = ActivitySplashBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     override fun onStart() {
         super.onStart()
-        startActivity(BreedsListActivity.newIntent(this))
+        // could pre-fetch data or check for updates
+        Handler().postDelayed({ navigateToMainScreen() }, 1000)
+    }
+
+    private fun navigateToMainScreen() {
+        startActivity(BreedsListActivity.newIntent(this@SplashActivity))
+        finish()
     }
 }
+
