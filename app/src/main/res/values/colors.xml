@@ -17,7 +17,7 @@
 
     <!-- New Colour themes -->
     <color name="orange_800">#EF6C00</color>
-    <color name="orange_400">#FFA726</color>
+    <color name="orange_400">#FFFDB06F</color>
 
 
     <color name="light_blue_50">#E7F3FB</color>
@@ -25,5 +25,6 @@
 
     <color name="white">#FFFFFF</color>
 
+    <color name="transparent">#00111111</color>
 
 </resources>
