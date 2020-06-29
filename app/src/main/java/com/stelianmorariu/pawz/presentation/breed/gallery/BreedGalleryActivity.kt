@@ -148,19 +148,27 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
     }
 
     private fun renderBreedImageGallery(viewState: DisplayGalleryState) {
-        binding.root.transitionToState(R.id.breed_gallery_state_default)
+        binding.errorLayout.root.visibility = View.INVISIBLE
+        binding.loadingLayout.root.visibility = View.INVISIBLE
+        binding.breedImageRecyclerView.visibility = View.VISIBLE
+
         breedGalleryAdaper.setItems(viewState.images)
     }
 
     private fun renderLoadingState() {
         loading = true
-        binding.root.transitionToState(R.id.breed_list_state_loading)
+        binding.breedImageRecyclerView.visibility = View.INVISIBLE
+        binding.errorLayout.root.visibility = View.INVISIBLE
+        binding.loadingLayout.root.visibility = View.VISIBLE
+
         loadingAnimation = binding.loadingLayout.loadingIv.drawable as AnimatedVectorDrawable
         startAnimating()
     }
 
     private fun renderErrorState(viewState: ErrorState) {
-        binding.root.transitionToState(R.id.breed_list_state_error)
+        binding.breedImageRecyclerView.visibility = View.INVISIBLE
+        binding.loadingLayout.root.visibility = View.INVISIBLE
+        binding.errorLayout.root.visibility = View.VISIBLE
 
         binding.errorLayout.imageView.loadImage(viewState.pawzError.imageId)
         binding.errorLayout.errorMessageTv.text =
