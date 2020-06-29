@@ -38,7 +38,7 @@ class PawzNoDataError(throwable: Throwable) : PawzError(
 )
 
 /**
- * Error used when we can't reach the server.
+ * Error used when the server is able to give us a reason for the failed request.
  */
 class PawzServerError(
     override val message: String,
@@ -46,7 +46,7 @@ class PawzServerError(
     throwable: Throwable
 ) : PawzError(
     message = message,
-    imageId = R.drawable.ic_dog_digging,
+    imageId = R.drawable.ic_dog_sad,
     localizedDisplayMessageResId = R.string.err_server_error_msg,
     throwable = throwable
 )
