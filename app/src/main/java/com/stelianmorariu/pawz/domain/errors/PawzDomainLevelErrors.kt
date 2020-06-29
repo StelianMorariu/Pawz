@@ -16,55 +16,46 @@ import com.stelianmorariu.pawz.R
  * and make process of displaying them to the user easier and more consistent.
  */
 sealed class PawzError(
-    override val message: String,
+    override val message: String = "",
     @DrawableRes val imageId: Int = R.drawable.ic_dog_sad,
-    @StringRes val localizedDisplayMessageResId: Int
-) : RuntimeException(message)
+    @StringRes val localizedDisplayMessageResId: Int,
+    val throwable: Throwable
+) : RuntimeException(throwable)
 
-class PawzGenericError(
-    override val message: String
-) : PawzError(
-    message, R.drawable.ic_dog_sad,
-    R.string.err_default_msg
+class PawzGenericError(throwable: Throwable) : PawzError(
+    imageId = R.drawable.ic_dog_sad,
+    localizedDisplayMessageResId = R.string.err_default_msg,
+    throwable = throwable
 )
 
 /**
  * Error used for empty state situations.
  */
-class PawzNoDataError(
-    override val message: String
-) : PawzError(
-    message, R.drawable.ic_dog_digging,
-    R.string.err_empty_state_msg
+class PawzNoDataError(throwable: Throwable) : PawzError(
+    imageId = R.drawable.ic_dog_digging,
+    localizedDisplayMessageResId = R.string.err_empty_state_msg,
+    throwable = throwable
 )
 
 /**
  * Error used when we can't reach the server.
  */
 class PawzServerError(
-    override val message: String
+    override val message: String,
+    val code: Int,
+    throwable: Throwable
 ) : PawzError(
-    message, R.drawable.ic_dog_digging,
-    R.string.err_server_error_msg
-)
-
-
-/**
- * Error used for empty state situations.
- */
-class PawzParsingError(
-    override val message: String
-) : PawzError(
-    message, R.drawable.ic_dog_sad,
-    R.string.err_parsing_msg
+    message = message,
+    imageId = R.drawable.ic_dog_digging,
+    localizedDisplayMessageResId = R.string.err_server_error_msg,
+    throwable = throwable
 )
 
 /**
  * Error used when there is no internet connection.
  */
-class PawzNoInternetError(
-    override val message: String
-) : PawzError(
-    message, R.drawable.ic_dog_with_stick,
-    R.string.err_no_internet_msg
+class PawzNoInternetError(throwable: Throwable) : PawzError(
+    imageId = R.drawable.ic_dog_with_stick,
+    localizedDisplayMessageResId = R.string.err_no_internet_msg,
+    throwable = throwable
 )
