@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) Stelian Morariu 2020.
+  -->
+
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:applyMotionScene="true"
+    app:layoutDescription="@xml/activity_breeds_list_scene"
+    tools:context=".presentation.breed.list.BreedsListActivity">
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bar_extended_height"
+        android:background="@drawable/shape_top_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/titleTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textAppearance="?textAppearanceHeadline2"
+        android:textColor="?colorOnPrimary"
+        android:transformPivotX="0sp"
+        android:transformPivotY="30sp"
+        app:layout_constraintBottom_toBottomOf="@id/frameLayout"
+        app:layout_constraintEnd_toStartOf="@+id/titleLogoIv"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@+id/frameLayout"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/titleLogoIv"
+        android:layout_width="@dimen/small_paws_icon_size"
+        android:layout_height="@dimen/small_paws_icon_size"
+        android:layout_gravity="end"
+        android:layout_marginStart="@dimen/default_padding"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_paws"
+        app:layout_constraintBottom_toBottomOf="@id/titleTv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/titleTv"
+        app:layout_constraintTop_toTopOf="@+id/titleTv" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/breedsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:paddingStart="@dimen/default_padding"
+        android:paddingEnd="@dimen/default_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frameLayout"
+        tools:listitem="@layout/list_item_breed" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineHalfToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="28dp" />
+
+    <include
+        android:id="@+id/loadingLayout"
+        layout="@layout/layout_loading_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <include
+        android:id="@+id/errorLayout"
+        layout="@layout/layout_faulty_state_baseline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

@@ -1,0 +1,29 @@
+<!--
+  ~ Copyright (c) Stelian Morariu 2020.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="800dp"
+    android:height="383.84427dp"
+    android:viewportWidth="2055"
+    android:viewportHeight="986">
+
+    <path android:pathData="M0,0V985.5C0,985.5 603.49,746.84 1008.5,743.5C1427.95,740.04 2055,985.5 2055,985.5V0H0Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endX="1027.5"
+                android:endY="985.5"
+                android:startX="1027.5"
+                android:startY="0"
+                android:type="linear">
+                <item
+                    android:color="@color/orange_800"
+                    android:offset="0.182292" />
+                <item
+                    android:color="@color/orange_400"
+                    android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

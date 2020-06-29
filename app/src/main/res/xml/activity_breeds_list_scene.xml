@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) Stelian Morariu 2020.
+  -->
+
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        android:id="@+id/breed_list_transition_recycler_collapse"
+        motion:constraintSetEnd="@+id/cs_breeds_collapsible_end"
+        motion:constraintSetStart="@id/cs_breeds_collapsible_start"
+        motion:duration="700">
+
+        <OnSwipe
+            motion:dragDirection="dragUp"
+            motion:touchAnchorId="@id/breedsRecyclerView"
+            motion:touchAnchorSide="top" />
+    </Transition>
+
+    <!--    Baseline -->
+    <ConstraintSet android:id="@+id/cs_breeds_baseline">
+        <Constraint
+            android:id="@+id/frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bar_extended_height"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent">
+
+        </Constraint>
+
+        <!--  Need to set text size manually because transitions can't infer it  -->
+        <Constraint
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleX="1"
+            android:scaleY="1"
+            motion:layout_constraintBottom_toBottomOf="@id/frameLayout"
+            motion:layout_constraintEnd_toStartOf="@+id/titleLogoIv"
+            motion:layout_constraintHorizontal_chainStyle="packed"
+            motion:layout_constraintStart_toStartOf="@+id/frameLayout"
+            motion:layout_constraintTop_toTopOf="parent">
+
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/titleLogoIv"
+            android:layout_width="@dimen/small_paws_icon_size"
+            android:layout_height="@dimen/small_paws_icon_size"
+            android:layout_gravity="end"
+            android:layout_marginStart="@dimen/default_padding"
+            motion:layout_constraintBottom_toBottomOf="@id/titleTv"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toEndOf="@+id/titleTv"
+            motion:layout_constraintTop_toTopOf="@+id/titleTv">
+            <CustomAttribute
+                motion:attributeName="translationX"
+                motion:customFloatValue="0" />
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/breedsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:visibility="visible"
+            motion:visibilityMode="ignore"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@id/frameLayout" />
+
+        <Constraint
+            android:id="@+id/errorLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:visibility="invisible"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:visibilityMode="ignore" />
+
+        <Constraint
+            android:id="@+id/loadingLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:visibility="invisible"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:visibilityMode="ignore" />
+
+    </ConstraintSet>
+
+    <!--    Collapsible transition start-->
+    <ConstraintSet
+        android:id="@+id/cs_breeds_collapsible_start"
+        motion:deriveConstraintsFrom="@id/cs_breeds_baseline">
+
+    </ConstraintSet>
+
+    <!--    Collapsible transition end-->
+    <ConstraintSet android:id="@+id/cs_breeds_collapsible_end">
+        <Constraint
+            android:id="@+id/frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent">
+            <CustomAttribute
+                motion:attributeName="background"
+                motion:customColorValue="@color/orange_800" />
+        </Constraint>
+        <Constraint
+            android:id="@+id/titleLogoIv"
+            android:layout_width="@dimen/small_paws_icon_size"
+            android:layout_height="@dimen/small_paws_icon_size"
+            android:scaleX="0.5"
+            android:scaleY="0.5"
+            motion:layout_constraintBottom_toBottomOf="@+id/frameLayout"
+            motion:layout_constraintEnd_toEndOf="@+id/titleTv"
+            motion:layout_constraintTop_toTopOf="@+id/frameLayout">
+            <CustomAttribute
+                motion:attributeName="translationX"
+                motion:customFloatValue="-112" />
+        </Constraint>
+        <Constraint
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:scaleX="0.5"
+            android:scaleY="0.6"
+            motion:layout_constraintStart_toStartOf="@+id/frameLayout"
+            motion:layout_constraintTop_toTopOf="parent">
+            <CustomAttribute
+                motion:attributeName="translationY"
+                motion:customFloatValue="-24" />
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/errorLayout"
+            android:visibility="invisible"
+            motion:visibilityMode="ignore" />
+
+        <Constraint
+            android:id="@+id/loadingLayout"
+            android:visibility="invisible"
+            motion:visibilityMode="ignore" />
+
+    </ConstraintSet>
+
+
+</MotionScene>
