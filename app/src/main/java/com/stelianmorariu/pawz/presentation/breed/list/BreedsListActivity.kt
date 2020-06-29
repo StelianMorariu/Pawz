@@ -11,6 +11,7 @@ import android.graphics.drawable.Animatable2
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
 import android.view.View.*
 import androidx.appcompat.app.AppCompatActivity
@@ -92,21 +93,18 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
     private fun renderBreedsList(viewState: DisplayBreedsState) {
         binding.errorLayout.root.visibility = INVISIBLE
         binding.loadingLayout.root.visibility = INVISIBLE
-        binding.breedsRecyclerView.visibility = VISIBLE
+
+        binding.breedsRecyclerView.refreshDrawableState()
 
         // we need to explicitly set state in order to correctly setup the recycler transition
-        resetMotionLayoutState()
-        breedsAdapter.setItems(viewState.breeds)
-    }
-
-    private fun resetMotionLayoutState() {
-        binding.root.setState(R.id.breed_list_state_default, -1, -1)
+        binding.root.setState(R.id.cs_breeds_collapsible_start, -1, -1)
         binding.root.setTransition(R.id.breed_list_transition_recycler_collapse)
+
+        Handler().postDelayed({ breedsAdapter.setItems(viewState.breeds) }, 100)
     }
 
     private fun renderLoadingState() {
         loading = true
-        binding.breedsRecyclerView.visibility = INVISIBLE
         binding.errorLayout.root.visibility = INVISIBLE
         binding.loadingLayout.root.visibility = VISIBLE
 
@@ -131,7 +129,6 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
     }
 
     private fun renderErrorState(viewState: ErrorState) {
-        binding.breedsRecyclerView.visibility = INVISIBLE
         binding.loadingLayout.root.visibility = INVISIBLE
         binding.errorLayout.root.visibility = VISIBLE
 

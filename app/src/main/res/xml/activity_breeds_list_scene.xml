@@ -17,13 +17,6 @@
             motion:touchAnchorSide="top" />
     </Transition>
 
-
-    <StateSet>
-        <State
-            android:id="@+id/breed_list_state_default"
-            motion:constraints="@id/cs_breeds_baseline" />
-    </StateSet>
-
     <!--    Baseline -->
     <ConstraintSet android:id="@+id/cs_breeds_baseline">
         <Constraint
@@ -73,6 +66,7 @@
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginEnd="@dimen/default_margin"
             android:visibility="visible"
+            motion:visibilityMode="ignore"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
