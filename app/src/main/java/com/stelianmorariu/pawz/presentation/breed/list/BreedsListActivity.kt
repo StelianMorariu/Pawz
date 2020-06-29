@@ -12,7 +12,7 @@ import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.View.OVER_SCROLL_NEVER
+import android.view.View.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -90,13 +90,26 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
     }
 
     private fun renderBreedsList(viewState: DisplayBreedsState) {
-        binding.root.transitionToState(R.id.breed_list_state_expanded)
+        binding.errorLayout.root.visibility = INVISIBLE
+        binding.loadingLayout.root.visibility = INVISIBLE
+        binding.breedsRecyclerView.visibility = VISIBLE
+
+        // we need to explicitly set state in order to correctly setup the recycler transition
+        resetMotionLayoutState()
         breedsAdapter.setItems(viewState.breeds)
+    }
+
+    private fun resetMotionLayoutState() {
+        binding.root.setState(R.id.breed_list_state_default, -1, -1)
+        binding.root.setTransition(R.id.breed_list_transition_recycler_collapse)
     }
 
     private fun renderLoadingState() {
         loading = true
-        binding.root.transitionToState(R.id.breed_list_state_loading)
+        binding.breedsRecyclerView.visibility = INVISIBLE
+        binding.errorLayout.root.visibility = INVISIBLE
+        binding.loadingLayout.root.visibility = VISIBLE
+
         loadingAnimation = binding.loadingLayout.loadingIv.drawable as AnimatedVectorDrawable
         startAnimating()
     }
@@ -118,7 +131,9 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
     }
 
     private fun renderErrorState(viewState: ErrorState) {
-        binding.root.transitionToState(R.id.breed_list_state_error)
+        binding.breedsRecyclerView.visibility = INVISIBLE
+        binding.loadingLayout.root.visibility = INVISIBLE
+        binding.errorLayout.root.visibility = VISIBLE
 
         binding.errorLayout.imageView.loadImage(viewState.pawzError.imageId)
         binding.errorLayout.errorMessageTv.text =
