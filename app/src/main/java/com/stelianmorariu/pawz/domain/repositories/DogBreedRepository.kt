@@ -4,12 +4,12 @@
 
 package com.stelianmorariu.pawz.domain.repositories
 
-import com.stelianmorariu.pawz.data.network.BreedImageListDto
+import com.stelianmorariu.pawz.data.network.DogApiResponseDto
 import com.stelianmorariu.pawz.data.network.DogApiService
-import com.stelianmorariu.pawz.data.network.DogBreedListDto
+import com.stelianmorariu.pawz.domain.errors.PawzGenericError
 import com.stelianmorariu.pawz.domain.errors.PawzNoDataError
 import com.stelianmorariu.pawz.domain.model.DogBreed
-import com.stelianmorariu.pawz.domain.toDomainModel
+import com.stelianmorariu.pawz.domain.toDogBreedList
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -17,37 +17,41 @@ class DogBreedRepository @Inject constructor(private val dogApiService: DogApiSe
 
     fun getAllBreeds(): Single<List<DogBreed>> =
         dogApiService.getAllBreads().flatMap {
-            if (it.status == DogBreedListDto.STATUS_SUCCESS) {
-                val mapped = it.toDomainModel()
+            if (it.status == DogApiResponseDto.STATUS_SUCCESS) {
+                val mapped = it.toDogBreedList()
 
                 if (mapped.isNullOrEmpty()) {
-                    Single.error(PawzNoDataError("failed mapping items"))
+                    Single.error(PawzNoDataError(RuntimeException("failed mapping items")))
                 } else {
                     Single.just(mapped)
                 }
             } else {
-                Single.error(PawzNoDataError(it.status))
+                // this should not be called
+                Single.error(RuntimeException("failed to get breeds"))
             }
         }
+
 
     fun getBreedImages(dogBreed: DogBreed) =
         getCorrectImageEndpoint(dogBreed)
             .flatMap {
-                if (it.status == BreedImageListDto.STATUS_SUCCESS) {
-                    if (it.breedImages.isNullOrEmpty()) {
-                        Single.error(PawzNoDataError("failed mapping items"))
+                if (it.status == DogApiResponseDto.STATUS_SUCCESS) {
+                    if (it.message.isNullOrEmpty()) {
+                        Single.error(PawzNoDataError(RuntimeException("No breed images")))
                     } else {
-                        Single.just(it.breedImages)
+                        Single.just(it.message)
                     }
                 } else {
-                    Single.error(PawzNoDataError(it.status))
+                    // this should not be called
+                    Single.error(PawzGenericError(RuntimeException("No breed images")))
                 }
             }
+
 
     /**
      * Determine if we have a sub-breed or a breed with no sub-breeds
      */
-    private fun getCorrectImageEndpoint(dogBreed: DogBreed): Single<BreedImageListDto> {
+    private fun getCorrectImageEndpoint(dogBreed: DogBreed): Single<DogApiResponseDto<List<String>>> {
         return if (dogBreed.subBreed.isEmpty()) {
             dogApiService.getBreedImageList(dogBreed.breed)
         } else {

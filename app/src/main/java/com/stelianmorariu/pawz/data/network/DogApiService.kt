@@ -13,18 +13,18 @@ import retrofit2.http.Path
 interface DogApiService {
 
     @GET(ALL_BREADS)
-    fun getAllBreads(): Single<DogBreedListDto>
+    fun getAllBreads(): Single<DogApiResponseDto<Map<String, List<String>>>>
 
     @GET(BREED_GALLERY)
     fun getBreedImageList(
         @Path(BREED_PATH_PARAM) breed: String
-    ): Single<BreedImageListDto>
+    ): Single<DogApiResponseDto<List<String>>>
 
     @GET(SUB_BREED_GALLERY)
     fun getSubBreedImageList(
         @Path(BREED_PATH_PARAM) breed: String,
         @Path(SUBBREED_PATH_PARAM) subBreed: String
-    ): Single<BreedImageListDto>
+    ): Single<DogApiResponseDto<List<String>>>
 
     companion object {
         const val BREED_PATH_PARAM = "breed"

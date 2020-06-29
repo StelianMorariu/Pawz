@@ -4,16 +4,16 @@
 
 package com.stelianmorariu.pawz.domain
 
-import com.stelianmorariu.pawz.data.network.DogBreedListDto
+import com.stelianmorariu.pawz.data.network.DogApiResponseDto
 import com.stelianmorariu.pawz.domain.model.DogBreed
 
 /**
  * Map the network response for dog breeds to the domain model.
  */
-fun DogBreedListDto.toDomainModel(): List<DogBreed> {
+fun DogApiResponseDto<Map<String, List<String>>>.toDogBreedList(): List<DogBreed> {
     val breeds: MutableList<DogBreed> = mutableListOf()
 
-    this.breedDtoMap.forEach { (breed, subBreedList) ->
+    this.message.forEach { (breed, subBreedList) ->
         if (subBreedList.isEmpty()) {
             breeds.add(DogBreed(breed, breed))
         } else {
@@ -22,5 +22,6 @@ fun DogBreedListDto.toDomainModel(): List<DogBreed> {
             }
         }
     }
+
     return breeds
 }
