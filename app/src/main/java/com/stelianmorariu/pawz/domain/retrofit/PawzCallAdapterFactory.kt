@@ -5,16 +5,21 @@
 
 package com.stelianmorariu.pawz.domain.retrofit
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.stelianmorariu.pawz.data.network.DogApiResponseDto
 import com.stelianmorariu.pawz.domain.errors.PawzError
 import com.stelianmorariu.pawz.domain.errors.PawzGenericError
 import com.stelianmorariu.pawz.domain.errors.PawzNoInternetError
 import com.stelianmorariu.pawz.domain.errors.PawzServerError
+import com.stelianmorariu.pawz.domain.scheduler.SchedulersProvider
 import io.reactivex.*
-import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.CallAdapter
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import timber.log.Timber
 import java.lang.reflect.Type
 import java.net.UnknownHostException
 
@@ -22,11 +27,15 @@ import java.net.UnknownHostException
  * Custom call adapter factory that intercepts errors and converts
  * them to [PawzError] before sending them upstream.
  */
-class PawzCallAdapterFactory(private val pawzConnectionChecker: PawzConnectionChecker) :
+class PawzCallAdapterFactory(
+    private val pawzConnectionChecker: PawzConnectionChecker,
+    private val schedulersProvider: SchedulersProvider,
+    private val gson: Gson
+) :
     CallAdapter.Factory() {
 
     private val rxJava2CallAdapterFactory by lazy {
-        RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
+        RxJava2CallAdapterFactory.createWithScheduler(schedulersProvider.io())
     }
 
     override fun get(
@@ -39,13 +48,14 @@ class PawzCallAdapterFactory(private val pawzConnectionChecker: PawzConnectionCh
             annotations, retrofit
         ) as CallAdapter<out Any, *>
 
-        return RxCallAdapterWrapper(retrofit, pawzConnectionChecker, wrapped)
+        return RxCallAdapterWrapper(retrofit, pawzConnectionChecker, wrapped, gson)
     }
 
     private class RxCallAdapterWrapper<R>(
         val retrofit: Retrofit,
         val connectionChecker: PawzConnectionChecker,
-        val wrappedCallAdapter: CallAdapter<R, *>
+        val wrappedCallAdapter: CallAdapter<R, *>,
+        val gson: Gson
     ) : CallAdapter<R, Any> {
 
         override fun responseType(): Type = wrappedCallAdapter.responseType()
@@ -74,14 +84,29 @@ class PawzCallAdapterFactory(private val pawzConnectionChecker: PawzConnectionCh
             when (throwable) {
                 // todo : gson parsing exceptions
                 is UnknownHostException -> getServerOrInternetError(throwable)
-                else -> PawzGenericError(throwable.message ?: "Unknown error")
+                is HttpException -> getCheckedServerException(throwable)
+                else -> PawzGenericError(throwable)
             }
+
+        private fun getCheckedServerException(throwable: HttpException): PawzError {
+            return try {
+                val response = throwable.response()
+                val responseType = object : TypeToken<DogApiResponseDto<String>>() {}.type
+                val serverResponse: DogApiResponseDto<String> =
+                    gson.fromJson(response.errorBody()?.string() ?: "", responseType)
+                PawzServerError(serverResponse.message, serverResponse.code, throwable)
+            } catch (e: Exception) {
+                Timber.e(e)
+                PawzGenericError(throwable)
+            }
+
+        }
 
         private fun getServerOrInternetError(throwable: UnknownHostException): PawzError {
             return if (connectionChecker.isConnected()) {
-                PawzServerError(throwable.localizedMessage ?: "")
+                PawzGenericError(throwable)
             } else {
-                PawzNoInternetError("No internet connection")
+                PawzNoInternetError(throwable)
             }
         }
 

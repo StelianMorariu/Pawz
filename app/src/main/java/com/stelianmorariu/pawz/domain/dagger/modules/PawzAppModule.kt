@@ -6,11 +6,13 @@ package com.stelianmorariu.pawz.domain.dagger.modules
 
 import android.app.Application
 import android.content.Context
+import com.google.gson.Gson
 import com.stelianmorariu.pawz.BuildConfig
 import com.stelianmorariu.pawz.data.network.DogApiService
 import com.stelianmorariu.pawz.domain.PawzConfig
 import com.stelianmorariu.pawz.domain.retrofit.PawzCallAdapterFactory
 import com.stelianmorariu.pawz.domain.retrofit.PawzConnectionChecker
+import com.stelianmorariu.pawz.domain.scheduler.SchedulersProvider
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -89,7 +91,14 @@ class PawzAppModule {
 
     @Provides
     @Singleton
-    fun providePawzCallAdapterFactory(pawzConnectionChecker: PawzConnectionChecker) =
-        PawzCallAdapterFactory(pawzConnectionChecker)
+    fun providePawzCallAdapterFactory(
+        pawzConnectionChecker: PawzConnectionChecker,
+        schedulersProvider: SchedulersProvider, gson: Gson
+    ) =
+        PawzCallAdapterFactory(pawzConnectionChecker, schedulersProvider, gson)
+
+    @Provides
+    @Singleton
+    fun provideGson() = Gson()
 
 }
