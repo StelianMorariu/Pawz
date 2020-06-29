@@ -25,7 +25,7 @@ class BreedListViewModel @Inject constructor(
 
     fun loadDataIfNecessary() {
         if (_viewState.value is Default) {
-           _viewState.postValue(LoadingState)
+            _viewState.postValue(LoadingState)
             compositeDisposable.add(
                 breedsRepository.getAllBreeds()
                     .subscribeOn(schedulersProvider.io())
@@ -48,7 +48,7 @@ class BreedListViewModel @Inject constructor(
         val state: BreedListViewState = if (error is PawzError) {
             ErrorState(error)
         } else {
-            ErrorState(PawzGenericError(error.localizedMessage ?: ""))
+            ErrorState(PawzGenericError(error))
         }
 
         _viewState.postValue(state)

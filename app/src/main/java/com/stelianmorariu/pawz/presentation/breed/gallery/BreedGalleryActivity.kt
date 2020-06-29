@@ -171,8 +171,14 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
         binding.errorLayout.root.visibility = View.VISIBLE
 
         binding.errorLayout.imageView.loadImage(viewState.pawzError.imageId)
-        binding.errorLayout.errorMessageTv.text =
-            getString(viewState.pawzError.localizedDisplayMessageResId)
+
+        if (viewState.pawzError.message.isEmpty()) {
+            binding.errorLayout.errorMessageTv.text =
+                getString(viewState.pawzError.localizedDisplayMessageResId)
+        } else {
+            binding.errorLayout.errorMessageTv.text = viewState.pawzError.message
+        }
+
     }
 
     private fun startAnimating() {

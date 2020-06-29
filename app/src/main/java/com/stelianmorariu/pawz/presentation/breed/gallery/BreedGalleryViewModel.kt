@@ -49,7 +49,7 @@ class BreedGalleryViewModel @Inject constructor(
         val state: BreedGalleryViewState = if (error is PawzError) {
             ErrorState(error)
         } else {
-            ErrorState(PawzGenericError(error.localizedMessage ?: ""))
+            ErrorState(PawzGenericError(error))
         }
 
         _viewState.postValue(state)
