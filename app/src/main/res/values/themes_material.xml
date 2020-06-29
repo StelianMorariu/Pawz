@@ -7,12 +7,18 @@
 
     <style name="Pawz.Splashscreen" parent="Pawz.DayNight">
         <item name="android:windowBackground">@color/orange_800</item>
+
+        <item name="android:navigationBarColor">@color/orange_800</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
     </style>
 
 
     <!-- Base application theme. -->
     <style name="Pawz.DayNight" parent="Base.Pawz">
         <item name="android:windowLightStatusBar">false</item>
+
+
+        <item name="android:navigationBarColor">@color/transparent</item>
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>
 
     </style>
