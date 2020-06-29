@@ -3,11 +3,11 @@
 
 <img src="art/app_demo.gif" width="200" height="400" />
 
-This is a simple app that reads and display data from [https://dog.ceo/dog-api/documentation/](https://dog.ceo/dog-api/documentation/)
+This is a simple app that reads and displays data from [https://dog.ceo/dog-api/documentation/](https://dog.ceo/dog-api/documentation/)
 
 ## Architecture
 
-I chose a simple MVVM architecture whit deterministic UI states represented by a specific [ViewState]().
+I chose a simple MVVM architecture with deterministic UI states represented by a specific [ViewState]().
 
 For this app it makes it really easy to render the UI and keep track of the current states(empty,error, data).
 
@@ -17,7 +17,7 @@ To save some time I didn't use UseCases or Interactors.
 
 I use DaggerAndroid for dependency injection. I found that libraries that use the service locator pattern tend to get messy really quick.
 
-To solve the problem of injecting ViewModels I have defined a custom factory(**PawzViewModelFactory**) and a custom key that effectively creates a map for every ViewModel. For this app I don't use SavedState and I think the approach would probably need some thinkering to make it work. 
+To solve the problem of injecting ViewModels I have defined a custom factory(**PawzViewModelFactory**) and a custom key that effectively creates a map for every ViewModel. For this app I don't use SavedState and I think the approach would probably need some tinkering to make it work. 
 
 To reduce Dagger boilerplate from Activities I created an Object called *AppInjector* that is bound to the lifecycle of the app.
 
@@ -48,7 +48,7 @@ For handling network errors I created a custom CallAdapterFactory for Retrofit.
 This factory will essentially intercept every error thrown at the network layer, convert it to a domain error and propagate it upstream.
 
 You could say that this factory is crossing the data-domain layers, and generally you would want to define separate error types for the data layer and let the repository map to the domain error. 
-I chose to map the errors direcly in the call adapter factory to save some time.
+I chose to map the errors directly in the call adapter factory to save some time.
 
 
 ## Testing
@@ -63,7 +63,7 @@ I chose to map the errors direcly in the call adapter factory to save some time.
 
 - create a custom view for the loading state so we can encapsulate animation related code
 - ViewStates for the screens are similar and have duplicate states(loading,error), look into extracting some base state class
-- take advantage of the splashscreen to pre-fecth the list of breeds and download a random image for every breed to use as a cover image
+- take advantage of the splashscreen to pre-fetch the list of breeds and download a random image for every breed to use as a cover image
 
 
 
