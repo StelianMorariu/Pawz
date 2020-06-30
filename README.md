@@ -5,6 +5,16 @@
 
 This is a simple app that reads and displays data from [https://dog.ceo/dog-api/documentation/](https://dog.ceo/dog-api/documentation/)
 
+## Code organization
+
+The majority if the projects I worked on included an SDK component, so the code was obviously modularized but in this instance I saw no need to add different modules. As such, the gradle dependencies are added directly in the app module instead of my usual practice of using **buildSrc** to define them.
+
+## CI compatibility
+
+I use *gradle.properties* to define custom properties for variables that can change based on the environment the app runs in. For this project only the API URL and a simple flag for allowing logs are defined as custom properties.
+
+These properties are wrapped inside a configuration object that can be injected where it's necessary.
+
 ## Architecture
 
 I chose a simple MVVM architecture with deterministic UI states represented by a specific [ViewState]().
