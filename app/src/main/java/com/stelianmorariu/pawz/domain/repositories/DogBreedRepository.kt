@@ -21,7 +21,7 @@ class DogBreedRepository @Inject constructor(private val dogApiService: DogApiSe
                 val mapped = it.toDogBreedList()
 
                 if (mapped.isNullOrEmpty()) {
-                    Single.error(PawzNoDataError(RuntimeException("failed mapping items")))
+                    Single.error(PawzNoDataError(RuntimeException("Failed mapping items")))
                 } else {
                     Single.just(mapped)
                 }
@@ -41,8 +41,7 @@ class DogBreedRepository @Inject constructor(private val dogApiService: DogApiSe
                         Single.just(it.message)
                     }
                 } else {
-                    // this should not be called
-                    Single.error(PawzGenericError(RuntimeException("No breed images")))
+                    Single.error(PawzGenericError(RuntimeException("Failed to get breed images")))
                 }
             }
 
