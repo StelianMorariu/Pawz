@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.stelianmorariu.pawz.data.network.DogApiResponseDto
 import com.stelianmorariu.pawz.data.network.DogApiService
+import com.stelianmorariu.pawz.domain.errors.PawzGenericError
 import com.stelianmorariu.pawz.domain.errors.PawzNoDataError
 import com.stelianmorariu.pawz.domain.errors.PawzServerError
 import com.stelianmorariu.pawz.domain.model.DogBreed
@@ -87,12 +88,30 @@ class DogBreedRepositoryTest {
     }
 
     @Test
+    fun `check that repository emits generic error if DTO status is not success for breed list`() {
+        whenever(mockDogApiService.getAllBreads())
+            .thenReturn(Single.just(breed_list_failed_dto))
+
+        dogBreedRepository = DogBreedRepository(mockDogApiService)
+        dogBreedRepository.getAllBreeds()
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .subscribe { breedList, error ->
+
+                assert(breedList == null)
+                assert(error != null)
+                assertThat(error, instanceOf(PawzGenericError::class.java))
+            }
+
+    }
+
+    @Test
     fun `check that repository calls correct image endpoint for breed`() {
 
         whenever(
             mockDogApiService.getBreedImageList(breed.breed)
         )
-            .thenReturn(Single.just(demo_urls))
+            .thenReturn(Single.just(breed_images_dto))
 
 
         dogBreedRepository = DogBreedRepository(mockDogApiService)
@@ -109,7 +128,7 @@ class DogBreedRepositoryTest {
         whenever(
             mockDogApiService.getSubBreedImageList(subbreed.breed, subbreed.subBreed)
         )
-            .thenReturn(Single.just(demo_urls))
+            .thenReturn(Single.just(breed_images_dto))
 
         dogBreedRepository = DogBreedRepository(mockDogApiService)
         val result = dogBreedRepository.getBreedImages(subbreed).blockingGet()
@@ -129,8 +148,7 @@ class DogBreedRepositoryTest {
         // subbreed
         whenever(
             mockDogApiService.getSubBreedImageList(subbreed.breed, subbreed.subBreed)
-        )
-            .thenReturn(Single.just(empty_image_list))
+        ).thenReturn(Single.just(empty_image_list))
 
         dogBreedRepository = DogBreedRepository(mockDogApiService)
         dogBreedRepository.getBreedImages(breed)
@@ -192,11 +210,54 @@ class DogBreedRepositoryTest {
             }
     }
 
+    @Test
+    fun `check that repository emits generic error if DTO status is not success for breed image list`() {
+
+        // breed
+        whenever(mockDogApiService.getBreedImageList(breed.breed))
+            .thenReturn(Single.just(breed_images_dto_failed))
+
+        // subbreed
+        whenever(
+            mockDogApiService.getSubBreedImageList(subbreed.breed, subbreed.subBreed)
+        ).thenReturn(Single.just(breed_images_dto_failed))
+
+        dogBreedRepository = DogBreedRepository(mockDogApiService)
+
+        dogBreedRepository.getBreedImages(breed)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .subscribe { imageList, error ->
+
+                assert(imageList == null)
+                assert(error != null)
+                assertThat(error, instanceOf(PawzGenericError::class.java))
+            }
+
+        dogBreedRepository.getBreedImages(subbreed)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .subscribe { imageList, error ->
+
+                assert(imageList == null)
+                assert(error != null)
+                assertThat(error, instanceOf(PawzGenericError::class.java))
+            }
+
+    }
+
+
     companion object {
         private val breed_list_dto = DogApiResponseDto<Map<String, List<String>>>(
             mapOf(
                 "breed1" to listOf<String>(), "breed2" to listOf("s1", "s2")
             ), DogApiResponseDto.STATUS_SUCCESS
+        )
+
+        private val breed_list_failed_dto = DogApiResponseDto<Map<String, List<String>>>(
+            mapOf(
+                "breed1" to listOf<String>(), "breed2" to listOf("s1", "s2")
+            ), DogApiResponseDto.STATUS_ERROR
         )
 
         private val empty_breed_list_dto = DogApiResponseDto<Map<String, List<String>>>(
@@ -206,9 +267,14 @@ class DogBreedRepositoryTest {
         private val breed = DogBreed("breed", "breed")
         private val subbreed = DogBreed("breed", "breed", "subbreed")
 
-        private val demo_urls = DogApiResponseDto<List<String>>(
+        private val breed_images_dto = DogApiResponseDto<List<String>>(
             listOf("url1", "url2", "url3"),
             DogApiResponseDto.STATUS_SUCCESS
+        )
+
+        private val breed_images_dto_failed = DogApiResponseDto<List<String>>(
+            listOf("url1", "url2", "url3"),
+            DogApiResponseDto.STATUS_ERROR
         )
         private val empty_image_list =
             DogApiResponseDto<List<String>>(listOf(), DogApiResponseDto.STATUS_SUCCESS)
