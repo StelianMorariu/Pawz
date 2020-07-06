@@ -26,8 +26,7 @@ class DogBreedRepository @Inject constructor(private val dogApiService: DogApiSe
                     Single.just(mapped)
                 }
             } else {
-                // this should not be called
-                Single.error(RuntimeException("failed to get breeds"))
+                Single.error(PawzGenericError(RuntimeException("Failed to get breeds")))
             }
         }
 
