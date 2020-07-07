@@ -62,11 +62,11 @@ I chose to map the errors directly in the call adapter factory to save some time
 
 
 ## Testing
-[Not implemented]
 
-- given the implemented architecture and render options(deterministic view states) the most valuable tests would be to verify that errors in the data layer are propagated correctly as domain errors
--  for ViewModel, the tests would be relatively simple and you would just need to check that the correct view states are produced
--  UI tests would also be relatively simple, except for MotionLayout which 
+- implemented Unit Tests to check that the ViewModels send the correct ViewStates to the views
+- implemented Unit Test to check that the repository will only emit the expected data or a PawzError
+- implemented Unit Test to check that the custom call adapter factory correctly wraps errors in PawzError(**DogApiServiceTest**)
+-  TODO: UI tests
 
 
 ## Improvements
