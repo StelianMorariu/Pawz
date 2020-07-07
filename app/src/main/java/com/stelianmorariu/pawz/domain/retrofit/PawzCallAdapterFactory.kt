@@ -21,6 +21,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import timber.log.Timber
 import java.lang.reflect.Type
+import java.net.ConnectException
 import java.net.UnknownHostException
 
 /**
@@ -84,6 +85,7 @@ class PawzCallAdapterFactory(
             when (throwable) {
                 // todo : gson parsing exceptions
                 is UnknownHostException -> getServerOrInternetError(throwable)
+                is ConnectException -> getServerOrInternetError(throwable)
                 is HttpException -> getCheckedServerException(throwable)
                 else -> PawzGenericError(throwable)
             }
@@ -102,7 +104,7 @@ class PawzCallAdapterFactory(
 
         }
 
-        private fun getServerOrInternetError(throwable: UnknownHostException): PawzError {
+        private fun getServerOrInternetError(throwable: Throwable): PawzError {
             return if (connectionChecker.isConnected()) {
                 PawzGenericError(throwable)
             } else {

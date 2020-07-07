@@ -12,6 +12,7 @@ import com.stelianmorariu.pawz.data.network.DogApiService
 import com.stelianmorariu.pawz.domain.PawzConfig
 import com.stelianmorariu.pawz.domain.retrofit.PawzCallAdapterFactory
 import com.stelianmorariu.pawz.domain.retrofit.PawzConnectionChecker
+import com.stelianmorariu.pawz.domain.retrofit.PawzConnectionCheckerImpl
 import com.stelianmorariu.pawz.domain.scheduler.SchedulersProvider
 import dagger.Module
 import dagger.Provides
@@ -87,7 +88,8 @@ class PawzAppModule {
 
     @Provides
     @Singleton
-    fun provideConnectivityChecker(context: Context) = PawzConnectionChecker(context)
+    fun provideConnectivityChecker(context: Context): PawzConnectionChecker =
+        PawzConnectionCheckerImpl(context)
 
     @Provides
     @Singleton
