@@ -18,7 +18,7 @@ import com.stelianmorariu.pawz.domain.scheduler.TestSchedulerProvider
 import io.reactivex.Single
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
-import org.hamcrest.CoreMatchers.instanceOf
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -45,10 +45,17 @@ class DogBreedRepositoryTest {
             .thenReturn(Single.just(breed_list_dto))
 
         dogBreedRepository = DogBreedRepository(mockDogApiService)
-        val result = dogBreedRepository.getAllBreeds().blockingGet()
+        val result = dogBreedRepository.getAllBreeds()
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .test()
 
-        assert(result.isNotEmpty())
-        assertEquals(result.size, 3)
+        result.assertComplete()
+        result.assertNoErrors()
+
+        result.assertValueCount(1)
+        assertThat(result.values()[0].size, equalTo(3))
+
     }
 
     @Test
@@ -57,15 +64,13 @@ class DogBreedRepositoryTest {
             .thenReturn(Single.just(empty_breed_list_dto))
 
         dogBreedRepository = DogBreedRepository(mockDogApiService)
-        dogBreedRepository.getAllBreeds()
+
+        val result = dogBreedRepository.getAllBreeds()
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe { breedList, error ->
+            .test()
 
-                assert(breedList == null)
-                assert(error != null)
-                assertThat(error, instanceOf(PawzNoDataError::class.java))
-            }
+        result.assertError(PawzNoDataError::class.java)
     }
 
     @Test
@@ -75,16 +80,14 @@ class DogBreedRepositoryTest {
             .thenReturn(Single.error(serverError))
 
         dogBreedRepository = DogBreedRepository(mockDogApiService)
-        dogBreedRepository.getAllBreeds()
+        val result = dogBreedRepository.getAllBreeds()
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe { breedList, error ->
+            .test()
 
-                assert(breedList == null)
-                assert(error != null)
-                assertThat(error, instanceOf(PawzServerError::class.java))
-                assertEquals(error, serverError)
-            }
+        result.assertError(PawzServerError::class.java)
+        result.assertErrorMessage(serverError.message)
+
     }
 
     @Test
@@ -93,16 +96,12 @@ class DogBreedRepositoryTest {
             .thenReturn(Single.just(breed_list_failed_dto))
 
         dogBreedRepository = DogBreedRepository(mockDogApiService)
-        dogBreedRepository.getAllBreeds()
+        val result = dogBreedRepository.getAllBreeds()
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe { breedList, error ->
+            .test()
 
-                assert(breedList == null)
-                assert(error != null)
-                assertThat(error, instanceOf(PawzGenericError::class.java))
-            }
-
+        result.assertError(PawzGenericError::class.java)
     }
 
     @Test
@@ -115,9 +114,17 @@ class DogBreedRepositoryTest {
 
 
         dogBreedRepository = DogBreedRepository(mockDogApiService)
-        val result = dogBreedRepository.getBreedImages(breed).blockingGet()
+        val result = dogBreedRepository.getBreedImages(breed)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .test()
 
-        assertTrue(result.isNotEmpty())
+        result.assertComplete()
+        result.assertNoErrors()
+
+        result.assertValueCount(1)
+        assertTrue(result.values()[0].isNotEmpty())
+
         verify(mockDogApiService, times(1)).getBreedImageList("breed")
         verify(mockDogApiService, times(0)).getSubBreedImageList("breed", "subbreed")
     }
@@ -131,9 +138,17 @@ class DogBreedRepositoryTest {
             .thenReturn(Single.just(breed_images_dto))
 
         dogBreedRepository = DogBreedRepository(mockDogApiService)
-        val result = dogBreedRepository.getBreedImages(subbreed).blockingGet()
+        val result = dogBreedRepository.getBreedImages(subbreed)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .test()
 
-        assertTrue(result.isNotEmpty())
+        result.assertComplete()
+        result.assertNoErrors()
+
+        result.assertValueCount(1)
+        assertTrue(result.values()[0].isNotEmpty())
+
         verify(mockDogApiService, times(0)).getBreedImageList("breed")
         verify(mockDogApiService, times(1)).getSubBreedImageList("breed", "subbreed")
     }
@@ -150,26 +165,23 @@ class DogBreedRepositoryTest {
             mockDogApiService.getSubBreedImageList(subbreed.breed, subbreed.subBreed)
         ).thenReturn(Single.just(empty_image_list))
 
+        // breed images
         dogBreedRepository = DogBreedRepository(mockDogApiService)
-        dogBreedRepository.getBreedImages(breed)
+        var result = dogBreedRepository.getBreedImages(breed)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe { imageList, error ->
+            .test()
 
-                assert(imageList == null)
-                assert(error != null)
-                assertThat(error, instanceOf(PawzNoDataError::class.java))
-            }
+        result.assertError(PawzNoDataError::class.java)
 
-        dogBreedRepository.getBreedImages(subbreed)
+        // subbreed images
+        result = dogBreedRepository.getBreedImages(subbreed)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe { imageList, error ->
+            .test()
 
-                assert(imageList == null)
-                assert(error != null)
-                assertThat(error, instanceOf(PawzNoDataError::class.java))
-            }
+        result.assertError(PawzNoDataError::class.java)
+
     }
 
     @Test
@@ -187,27 +199,23 @@ class DogBreedRepositoryTest {
 
         dogBreedRepository = DogBreedRepository(mockDogApiService)
 
-        dogBreedRepository.getBreedImages(breed)
+        // breed images
+        var result = dogBreedRepository.getBreedImages(breed)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe { imageList, error ->
+            .test()
 
-                assert(imageList == null)
-                assert(error != null)
-                assertThat(error, instanceOf(PawzServerError::class.java))
-                assertEquals(error, serverError)
-            }
+        result.assertError(PawzServerError::class.java)
+        assertEquals(result.errors()[0], serverError)
 
-        dogBreedRepository.getBreedImages(subbreed)
+        // subbreed images
+        result = dogBreedRepository.getBreedImages(subbreed)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe { imageList, error ->
+            .test()
 
-                assert(imageList == null)
-                assert(error != null)
-                assertThat(error, instanceOf(PawzServerError::class.java))
-                assertEquals(error, serverError)
-            }
+        result.assertError(PawzServerError::class.java)
+        assertEquals(result.errors()[0], serverError)
     }
 
     @Test
@@ -224,26 +232,21 @@ class DogBreedRepositoryTest {
 
         dogBreedRepository = DogBreedRepository(mockDogApiService)
 
-        dogBreedRepository.getBreedImages(breed)
+        // breed images
+        var result = dogBreedRepository.getBreedImages(breed)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe { imageList, error ->
+            .test()
 
-                assert(imageList == null)
-                assert(error != null)
-                assertThat(error, instanceOf(PawzGenericError::class.java))
-            }
+        result.assertError(PawzGenericError::class.java)
 
-        dogBreedRepository.getBreedImages(subbreed)
+        // subbreed images
+        result = dogBreedRepository.getBreedImages(subbreed)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe { imageList, error ->
+            .test()
 
-                assert(imageList == null)
-                assert(error != null)
-                assertThat(error, instanceOf(PawzGenericError::class.java))
-            }
-
+        result.assertError(PawzGenericError::class.java)
     }
 
 
