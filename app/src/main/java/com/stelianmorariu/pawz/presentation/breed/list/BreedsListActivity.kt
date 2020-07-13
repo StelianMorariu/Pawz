@@ -6,7 +6,6 @@ package com.stelianmorariu.pawz.presentation.breed.list
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
@@ -22,11 +21,13 @@ import com.stelianmorariu.pawz.domain.model.DogBreed
 import com.stelianmorariu.pawz.presentation.breed.gallery.BreedGalleryActivity
 import com.stelianmorariu.pawz.presentation.common.SimpleItemClickListener
 import com.stelianmorariu.pawz.presentation.common.loadImage
+import com.stelianmorariu.pawz.presentation.common.widgets.PawzLoadingView
 import com.stelianmorariu.pawz.presentation.common.widgets.StackUpListItemAnimator
 import javax.inject.Inject
 
 
-class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListener<DogBreed> {
+class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListener<DogBreed>,
+    PawzLoadingView.PawzLoadingAnimationListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -38,11 +39,10 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
         ViewModelProvider(this, viewModelFactory).get(BreedListViewModel::class.java)
     }
 
-    private var loadingAnimation: AnimatedVectorDrawable? = null
-    private var loading = false
-
     // limit the number of times we process breed clicks
     private var canProcessItemClicks = true
+
+    private var unprocessedViewState: BreedListViewState? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +50,9 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
         binding = ActivityBreedsListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         initRecyclerView()
+
+        binding.loadingView.pawzLoadingAnimationListener = this
 
         viewModel.viewState.observe(this, Observer { viewState ->
             updateUiState(viewState)
@@ -78,8 +79,24 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
         }
     }
 
+    override fun onPawzLoadingAnimationCompleted() {
+        unprocessedViewState?.let { processUiUpdate(it) }
+    }
+
     private fun updateUiState(viewState: BreedListViewState) {
-        binding.loadingView.stopAnimation()
+        unprocessedViewState = null
+
+        if (binding.loadingView.isLoading) {
+            if (viewState !is LoadingState) {
+                binding.loadingView.stopAnimation()
+                unprocessedViewState = viewState
+            }
+        } else {
+            processUiUpdate(viewState)
+        }
+    }
+
+    private fun processUiUpdate(viewState: BreedListViewState) {
         when (viewState) {
             is ErrorState -> renderErrorState(viewState)
             is LoadingState -> renderLoadingState()
@@ -138,4 +155,5 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
         }
 
     }
+
 }

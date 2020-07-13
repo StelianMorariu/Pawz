@@ -24,12 +24,13 @@ import com.stelianmorariu.pawz.presentation.common.loadImage
 import com.stelianmorariu.pawz.presentation.common.loadImageNoCrop
 import com.stelianmorariu.pawz.presentation.common.widgets.GalleryLinearSmoothScroller
 import com.stelianmorariu.pawz.presentation.common.widgets.GridLayoutItemSpaceDecorator
+import com.stelianmorariu.pawz.presentation.common.widgets.PawzLoadingView
 import com.stfalcon.imageviewer.StfalconImageViewer
 import javax.inject.Inject
 
 
 class BreedGalleryActivity : AppCompatActivity(), Injectable,
-    SimpleItemClickListener<Pair<Int, ImageView>> {
+    SimpleItemClickListener<Pair<Int, ImageView>>, PawzLoadingView.PawzLoadingAnimationListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -50,6 +51,8 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
     // limit the number of times we process breed clicks
     private var canProcessItemClicks = true
 
+    private var unprocessedViewState: BreedGalleryViewState? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -68,6 +71,7 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
         initToolbar()
         initRecyclerView()
 
+        binding.loadingView.pawzLoadingAnimationListener = this
         viewModel.viewState.observe(this, Observer { viewState ->
             updateUiState(viewState)
         })
@@ -93,6 +97,10 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
             canProcessItemClicks = false
             showFullScreenImageViewer(positionWithTargetPair)
         }
+    }
+
+    override fun onPawzLoadingAnimationCompleted() {
+        unprocessedViewState?.let { processUiUpdate(it) }
     }
 
     private fun showFullScreenImageViewer(positionWithTargetPair: Pair<Int, ImageView>) {
@@ -132,7 +140,19 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
     }
 
     private fun updateUiState(viewState: BreedGalleryViewState) {
-        binding.loadingView.stopAnimation()
+        unprocessedViewState = null
+
+        if (binding.loadingView.isLoading) {
+            if (viewState !is LoadingState) {
+                binding.loadingView.stopAnimation()
+                unprocessedViewState = viewState
+            }
+        } else {
+            processUiUpdate(viewState)
+        }
+    }
+
+    private fun processUiUpdate(viewState: BreedGalleryViewState) {
         when (viewState) {
             is ErrorState -> renderErrorState(viewState)
             is LoadingState -> renderLoadingState()

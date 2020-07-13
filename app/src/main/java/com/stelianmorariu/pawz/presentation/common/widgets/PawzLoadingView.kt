@@ -22,6 +22,10 @@ class PawzLoadingView : LinearLayout {
     private var loading = false
     private lateinit var binding: LayoutLoadingStateBinding
 
+    var isLoading: Boolean = loading
+        get() = loading
+        private set
+
     var pawzLoadingAnimationListener: PawzLoadingAnimationListener? = null
 
     private val animatableListener: AnimationCallback by lazy { getAnimatableListener() }
