@@ -6,10 +6,6 @@ package com.stelianmorariu.pawz.presentation.breed.gallery
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Animatable
-import android.graphics.drawable.Animatable2
-import android.graphics.drawable.AnimatedVectorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -44,9 +40,6 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
     private val viewModel by lazy {
         ViewModelProvider(this, viewModelFactory).get(BreedGalleryViewModel::class.java)
     }
-
-    private var loadingAnimation: AnimatedVectorDrawable? = null
-    private var loading = false
 
     private var breedGalleryAdaper = BreedGalleryAdapter(this)
 
@@ -139,7 +132,7 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
     }
 
     private fun updateUiState(viewState: BreedGalleryViewState) {
-        stopAnimation()
+        binding.loadingView.stopAnimation()
         when (viewState) {
             is ErrorState -> renderErrorState(viewState)
             is LoadingState -> renderLoadingState()
@@ -149,25 +142,23 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
 
     private fun renderBreedImageGallery(viewState: DisplayGalleryState) {
         binding.errorLayout.root.visibility = View.INVISIBLE
-        binding.loadingLayout.root.visibility = View.INVISIBLE
+        binding.loadingView.visibility = View.INVISIBLE
         binding.breedImageRecyclerView.visibility = View.VISIBLE
 
         breedGalleryAdaper.setItems(viewState.images)
     }
 
     private fun renderLoadingState() {
-        loading = true
         binding.breedImageRecyclerView.visibility = View.INVISIBLE
         binding.errorLayout.root.visibility = View.INVISIBLE
-        binding.loadingLayout.root.visibility = View.VISIBLE
+        binding.loadingView.visibility = View.VISIBLE
 
-        loadingAnimation = binding.loadingLayout.loadingIv.drawable as AnimatedVectorDrawable
-        startAnimating()
+        binding.loadingView.startAnimating()
     }
 
     private fun renderErrorState(viewState: ErrorState) {
         binding.breedImageRecyclerView.visibility = View.INVISIBLE
-        binding.loadingLayout.root.visibility = View.INVISIBLE
+        binding.loadingView.visibility = View.INVISIBLE
         binding.errorLayout.root.visibility = View.VISIBLE
 
         binding.errorLayout.imageView.loadImage(viewState.pawzError.imageId)
@@ -179,22 +170,6 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
             binding.errorLayout.errorMessageTv.text = viewState.pawzError.message
         }
 
-    }
-
-    private fun startAnimating() {
-        loadingAnimation?.registerAnimationCallback(object : Animatable2.AnimationCallback() {
-            override fun onAnimationEnd(drawable: Drawable?) {
-                if (loading) {
-                    (drawable as Animatable).start()
-                }
-            }
-        })
-
-        loadingAnimation?.start()
-    }
-
-    private fun stopAnimation() {
-        loadingAnimation?.stop()
     }
 
     private fun initToolbar() {
