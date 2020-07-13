@@ -6,7 +6,7 @@ package com.stelianmorariu.pawz.presentation.common.widgets
 
 import android.content.Context
 import android.graphics.drawable.Animatable
-import android.graphics.drawable.Animatable2
+import android.graphics.drawable.Animatable2.AnimationCallback
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
@@ -21,6 +21,10 @@ class PawzLoadingView : LinearLayout {
     private var loadingAnimation: AnimatedVectorDrawable? = null
     private var loading = false
     private lateinit var binding: LayoutLoadingStateBinding
+
+    var pawzLoadingAnimationListener: PawzLoadingAnimationListener? = null
+
+    private val animatableListener: AnimationCallback by lazy { getAnimatableListener() }
 
     constructor(context: Context) : super(context) {
         init(null, 0)
@@ -45,24 +49,33 @@ class PawzLoadingView : LinearLayout {
         orientation = VERTICAL
 
         loadingAnimation = binding.loadingIv.drawable as AnimatedVectorDrawable
+        loadingAnimation?.registerAnimationCallback(animatableListener)
     }
 
 
     fun startAnimating() {
         loading = true
-        loadingAnimation?.registerAnimationCallback(object : Animatable2.AnimationCallback() {
-            override fun onAnimationEnd(drawable: Drawable?) {
-                if (loading) {
-                    (drawable as Animatable).start()
-                }
-            }
-        })
-
         loadingAnimation?.start()
     }
 
     fun stopAnimation() {
         loading = false
-//        loadingAnimation?.stop()
+    }
+
+    private fun getAnimatableListener() =
+        object : AnimationCallback() {
+            override fun onAnimationEnd(drawable: Drawable?) {
+                if (loading) {
+                    (drawable as Animatable).start()
+                } else {
+                    pawzLoadingAnimationListener?.onPawzLoadingAnimationCompleted()
+                }
+            }
+        }
+
+
+    interface PawzLoadingAnimationListener {
+
+        fun onPawzLoadingAnimationCompleted()
     }
 }
