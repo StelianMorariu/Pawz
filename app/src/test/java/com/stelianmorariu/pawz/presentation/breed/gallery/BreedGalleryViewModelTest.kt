@@ -11,8 +11,7 @@ import com.stelianmorariu.pawz.domain.errors.PawzGenericError
 import com.stelianmorariu.pawz.domain.errors.PawzNoDataError
 import com.stelianmorariu.pawz.domain.errors.PawzServerError
 import com.stelianmorariu.pawz.domain.model.DogBreed
-import com.stelianmorariu.pawz.domain.repositories.DogBreedRepository
-import com.stelianmorariu.pawz.domain.scheduler.TestSchedulerProvider
+import com.stelianmorariu.pawz.domain.usecases.GetBreedGalleryUseCase
 import io.reactivex.Single
 import junit.framework.Assert.assertEquals
 import org.hamcrest.CoreMatchers
@@ -29,8 +28,7 @@ import org.mockito.MockitoAnnotations
  */
 class BreedGalleryViewModelTest {
 
-    private val mockRepository: DogBreedRepository = mock()
-    private val schedulerProvider = TestSchedulerProvider()
+    private val breedGalleryUseCase: GetBreedGalleryUseCase = mock()
     private lateinit var viewModel: BreedGalleryViewModel
 
     @get:Rule
@@ -39,21 +37,19 @@ class BreedGalleryViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
+        viewModel = BreedGalleryViewModel(breedGalleryUseCase)
     }
 
     @Test
     fun `check that view model begins with correct state`() {
-        viewModel = BreedGalleryViewModel(mockRepository, schedulerProvider)
-
         Assert.assertThat(viewModel.viewState.value, CoreMatchers.instanceOf(Default::class.java))
     }
 
     @Test
     fun `check that breed image urls are loaded`() {
-        whenever(mockRepository.getBreedImages(default_dog_breed))
+        whenever(breedGalleryUseCase.getBreedImages(default_dog_breed))
             .thenReturn(Single.just(breed_image_urls))
 
-        viewModel = BreedGalleryViewModel(mockRepository, schedulerProvider)
         viewModel.loadDataIfNecessary(default_dog_breed)
 
         val expectedState = DisplayGalleryState(breed_image_urls)
@@ -66,10 +62,9 @@ class BreedGalleryViewModelTest {
     fun `check that empty state is returned when the repository returns an empty list`() {
         val pawzError = PawzNoDataError(RuntimeException("no images"))
 
-        whenever(mockRepository.getBreedImages(default_dog_breed))
+        whenever(breedGalleryUseCase.getBreedImages(default_dog_breed))
             .thenReturn(Single.error(pawzError))
 
-        viewModel = BreedGalleryViewModel(mockRepository, schedulerProvider)
         viewModel.loadDataIfNecessary(default_dog_breed)
 
         val expectedState = ErrorState(pawzError)
@@ -82,10 +77,9 @@ class BreedGalleryViewModelTest {
     fun `check that server error is propagated correctly`() {
         val pawzError = PawzServerError("Server error message", 500, RuntimeException("500"))
 
-        whenever(mockRepository.getBreedImages(default_dog_breed))
+        whenever(breedGalleryUseCase.getBreedImages(default_dog_breed))
             .thenReturn(Single.error(pawzError))
 
-        viewModel = BreedGalleryViewModel(mockRepository, schedulerProvider)
         viewModel.loadDataIfNecessary(default_dog_breed)
 
         val expectedState = ErrorState(pawzError)
@@ -100,10 +94,9 @@ class BreedGalleryViewModelTest {
     fun `check that generic runtime error is wrapped in PawzError`() {
         val genericRuntimeException = RuntimeException("test exception")
 
-        whenever(mockRepository.getBreedImages(default_dog_breed))
+        whenever(breedGalleryUseCase.getBreedImages(default_dog_breed))
             .thenReturn(Single.error(genericRuntimeException))
 
-        viewModel = BreedGalleryViewModel(mockRepository, schedulerProvider)
         viewModel.loadDataIfNecessary(default_dog_breed)
 
 
