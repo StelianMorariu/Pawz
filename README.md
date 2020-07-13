@@ -71,7 +71,7 @@ I chose to map the errors directly in the call adapter factory to save some time
 
 ## Improvements
 
-- create a custom view for the loading state so we can encapsulate animation related code
+- <s>create a custom view for the loading state so we can encapsulate animation related code</s>
 - ViewStates for the screens are similar and have duplicate states(loading,error), look into extracting some base state class
 - take advantage of the splashscreen to pre-fetch the list of breeds and download a random image for every breed to use as a cover image
 
