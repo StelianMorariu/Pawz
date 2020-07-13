@@ -6,10 +6,7 @@ package com.stelianmorariu.pawz.presentation.breed.list
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Animatable
-import android.graphics.drawable.Animatable2
 import android.graphics.drawable.AnimatedVectorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
@@ -82,7 +79,7 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
     }
 
     private fun updateUiState(viewState: BreedListViewState) {
-        stopAnimation()
+        binding.loadingView.stopAnimation()
         when (viewState) {
             is ErrorState -> renderErrorState(viewState)
             is LoadingState -> renderLoadingState()
@@ -92,7 +89,7 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
 
     private fun renderBreedsList(viewState: DisplayBreedsState) {
         binding.errorLayout.root.visibility = INVISIBLE
-        binding.loadingLayout.root.visibility = INVISIBLE
+        binding.loadingView.visibility = INVISIBLE
 
         binding.breedsRecyclerView.refreshDrawableState()
 
@@ -104,32 +101,13 @@ class BreedsListActivity : AppCompatActivity(), Injectable, SimpleItemClickListe
     }
 
     private fun renderLoadingState() {
-        loading = true
         binding.errorLayout.root.visibility = INVISIBLE
-        binding.loadingLayout.root.visibility = VISIBLE
-
-        loadingAnimation = binding.loadingLayout.loadingIv.drawable as AnimatedVectorDrawable
-        startAnimating()
-    }
-
-    private fun startAnimating() {
-        loadingAnimation?.registerAnimationCallback(object : Animatable2.AnimationCallback() {
-            override fun onAnimationEnd(drawable: Drawable?) {
-                if (loading) {
-                    (drawable as Animatable).start()
-                }
-            }
-        })
-
-        loadingAnimation?.start()
-    }
-
-    private fun stopAnimation() {
-        loadingAnimation?.stop()
+        binding.loadingView.visibility = VISIBLE
+        binding.loadingView.startAnimating()
     }
 
     private fun renderErrorState(viewState: ErrorState) {
-        binding.loadingLayout.root.visibility = INVISIBLE
+        binding.loadingView.visibility = INVISIBLE
         binding.errorLayout.root.visibility = VISIBLE
 
         binding.errorLayout.imageView.loadImage(viewState.pawzError.imageId)
