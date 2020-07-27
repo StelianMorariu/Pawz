@@ -5,6 +5,7 @@
 package com.stelianmorariu.pawz.domain.dagger
 
 import android.app.Application
+import com.stelianmorariu.pawz.TestPawzApp
 import com.stelianmorariu.pawz.data.network.DogApiService
 import com.stelianmorariu.pawz.domain.dagger.modules.AppActivityContributorModule
 import com.stelianmorariu.pawz.domain.dagger.modules.AppViewModelsModule
@@ -26,6 +27,7 @@ import javax.inject.Singleton
 )
 interface TestPawzAppComponent : PawzAppComponent {
 
+    fun inject(app: TestPawzApp)
 
     fun dogApiService(): DogApiService
 

@@ -13,7 +13,7 @@ import dagger.android.DaggerApplication
 import timber.log.Timber
 import javax.inject.Inject
 
-class PawzApp : DaggerApplication() {
+open class PawzApp : DaggerApplication() {
 
     @Inject
     lateinit var appConfiguration: PawzConfig
