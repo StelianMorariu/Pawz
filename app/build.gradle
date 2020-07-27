@@ -17,7 +17,7 @@ android {
         versionCode Integer.parseInt(project.property('project.buildnumber'))
         versionName project.property('project.buildversion')
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.stelianmorariu.pawz.PawzTestRunner"
     }
 
     sourceSets {
