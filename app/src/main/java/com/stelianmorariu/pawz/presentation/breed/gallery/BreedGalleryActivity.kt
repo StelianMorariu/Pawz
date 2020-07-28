@@ -56,25 +56,27 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        try {
-            currentBreed = intent.getParcelableExtra(BREED)!!
-        } catch (e: Exception) {
+        val parcelableExtra: DogBreed? = intent.getParcelableExtra(BREED)
+        if (parcelableExtra == null) {
             // todo show error message to user
             finish()
+        } else {
+            currentBreed = parcelableExtra
+
+            binding = ActivityBreedGalleryBinding.inflate(layoutInflater)
+            setContentView(binding.root)
+
+            smoothScroller = GalleryLinearSmoothScroller(this)
+
+            initToolbar()
+            initRecyclerView()
+
+            binding.loadingView.pawzLoadingAnimationListener = this
+            viewModel.viewState.observe(this, Observer { viewState ->
+                updateUiState(viewState)
+            })
         }
 
-        binding = ActivityBreedGalleryBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        smoothScroller = GalleryLinearSmoothScroller(this)
-
-        initToolbar()
-        initRecyclerView()
-
-        binding.loadingView.pawzLoadingAnimationListener = this
-        viewModel.viewState.observe(this, Observer { viewState ->
-            updateUiState(viewState)
-        })
     }
 
     override fun onStart() {
@@ -217,7 +219,7 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
 
     companion object {
 
-        private const val BREED = "com.stelianmorariu.pawz.BREED"
+        const val BREED = "com.stelianmorariu.pawz.BREED"
 
         fun newIntent(context: Context, breed: DogBreed): Intent {
             val intent = Intent(context, BreedGalleryActivity::class.java)
