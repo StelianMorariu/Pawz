@@ -18,6 +18,8 @@ import com.stelianmorariu.pawz.R
 import com.stelianmorariu.pawz.TestPawzApp
 import com.stelianmorariu.pawz.domain.FakeDogApiService
 import com.stelianmorariu.pawz.util.EspressoIdlingResource
+import com.stelianmorariu.pawz.util.RecyclerViewItemCountAssertion
+import org.hamcrest.Matchers.greaterThan
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -65,6 +67,9 @@ class BreedsListActivityTest {
         Espresso.onView(withId(R.id.breedsRecyclerView))
             .check(ViewAssertions.matches(isDisplayed()))
 
+        // check that we have items in the recycler view
+        Espresso.onView(withId(R.id.breedsRecyclerView))
+            .check(RecyclerViewItemCountAssertion(greaterThan(0)))
     }
 
     @Test
