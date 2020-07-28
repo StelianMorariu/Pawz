@@ -13,7 +13,7 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.filters.LargeTest
+import androidx.test.filters.MediumTest
 import com.stelianmorariu.pawz.R
 import com.stelianmorariu.pawz.TestPawzApp
 import com.stelianmorariu.pawz.domain.FakeDogApiService
@@ -25,7 +25,7 @@ import org.junit.Before
 import org.junit.Test
 
 
-@LargeTest
+@MediumTest
 class BreedsListActivityTest {
 
     lateinit var fakeDogApiService: FakeDogApiService
