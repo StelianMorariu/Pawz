@@ -62,7 +62,6 @@ class BreedsListActivityTest {
     fun breeds_are_displayed_on_screen() {
         val activityScenario = ActivityScenario.launch(BreedsListActivity::class.java)
 
-
         // check that breeds are displayed on the screen
         Espresso.onView(withId(R.id.breedsRecyclerView))
             .check(ViewAssertions.matches(isDisplayed()))
@@ -74,7 +73,6 @@ class BreedsListActivityTest {
 
     @Test
     fun empty_state_is_displayed_on_screen() {
-
         fakeDogApiService.throwNoDataError = true
 
         val activityScenario = ActivityScenario.launch(BreedsListActivity::class.java)
@@ -91,7 +89,6 @@ class BreedsListActivityTest {
 
     @Test
     fun no_internet_is_displayed_on_screen_when_no_internet() {
-
         fakeDogApiService.throwNoInternetError = true
 
         val activityScenario = ActivityScenario.launch(BreedsListActivity::class.java)
@@ -104,4 +101,19 @@ class BreedsListActivityTest {
             .check(ViewAssertions.matches(ViewMatchers.withText(R.string.err_no_internet_msg)))
     }
 
+
+    @Test
+    fun server_error_is_displayed_on_screen() {
+        fakeDogApiService.throwServerError = true
+
+        val activityScenario = ActivityScenario.launch(BreedsListActivity::class.java)
+
+        // check that empty view state is displayed
+        Espresso.onView(withId(R.id.errorLayout))
+            .check(ViewAssertions.matches(isDisplayed()))
+
+        // server error message is "Server error"
+        Espresso.onView(withId(R.id.errorMessageTv))
+            .check(ViewAssertions.matches(ViewMatchers.withText("Server error")))
+    }
 }
