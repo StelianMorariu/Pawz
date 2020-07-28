@@ -2,20 +2,19 @@
  * Copyright (c) Stelian Morariu 2020.
  */
 
-package com.stelianmorariu.pawz.domain.dagger.modules
+package com.stelianmorariu.pawz.domain.dagger
 
 import android.app.Application
 import android.content.Context
-import com.stelianmorariu.pawz.BuildConfig
+import com.stelianmorariu.pawz.domain.FakeConnectionChecker
 import com.stelianmorariu.pawz.domain.PawzConfig
 import com.stelianmorariu.pawz.domain.retrofit.PawzConnectionChecker
-import com.stelianmorariu.pawz.domain.retrofit.PawzConnectionCheckerImpl
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class PawzAppModule {
+class TestPawzAppModule() {
 
     /**
      * Provide a [Context] object across the whole app.
@@ -24,18 +23,18 @@ class PawzAppModule {
     @Singleton
     fun provideContext(app: Application) = app.applicationContext
 
-
     /**
      * Provide a [PawzConfig] object across the whole app.
      */
     @Provides
     @Singleton
     fun provideConfiguration(): PawzConfig =
-        PawzConfig(BuildConfig.LOGS_ENABLED, BuildConfig.DOG_API_URL)
-
+        PawzConfig(true, "/")
 
     @Provides
     @Singleton
-    fun provideConnectivityChecker(context: Context): PawzConnectionChecker =
-        PawzConnectionCheckerImpl(context)
+    fun provideConnectivityChecker(): PawzConnectionChecker =
+        FakeConnectionChecker()
+
+
 }

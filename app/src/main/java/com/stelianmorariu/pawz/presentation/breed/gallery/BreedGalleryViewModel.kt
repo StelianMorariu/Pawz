@@ -9,15 +9,12 @@ import androidx.lifecycle.MutableLiveData
 import com.stelianmorariu.pawz.domain.errors.PawzError
 import com.stelianmorariu.pawz.domain.errors.PawzGenericError
 import com.stelianmorariu.pawz.domain.model.DogBreed
-import com.stelianmorariu.pawz.domain.repositories.DogBreedRepository
-import com.stelianmorariu.pawz.domain.scheduler.SchedulersProvider
+import com.stelianmorariu.pawz.domain.usecases.GetBreedGalleryUseCase
 import com.stelianmorariu.pawz.presentation.common.BaseViewModel
 import javax.inject.Inject
 
-class BreedGalleryViewModel @Inject constructor(
-    private val breedsRepository: DogBreedRepository,
-    private val schedulersProvider: SchedulersProvider
-) : BaseViewModel() {
+class BreedGalleryViewModel @Inject constructor(private val breedGalleryUseCase: GetBreedGalleryUseCase) :
+    BaseViewModel() {
 
     val viewState: LiveData<BreedGalleryViewState>
         get() = _viewState
@@ -28,9 +25,7 @@ class BreedGalleryViewModel @Inject constructor(
         if (_viewState.value is Default) {
             _viewState.postValue(LoadingState)
             compositeDisposable.add(
-                breedsRepository.getBreedImages(dogBreed)
-                    .subscribeOn(schedulersProvider.io())
-                    .observeOn(schedulersProvider.ui())
+                breedGalleryUseCase.getBreedImages(dogBreed)
                     .subscribe { breedImageList, error ->
                         if (error != null) {
                             // check error type if there are multiple types

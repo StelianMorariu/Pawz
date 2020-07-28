@@ -6,10 +6,6 @@ package com.stelianmorariu.pawz.presentation.breed.gallery
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Animatable
-import android.graphics.drawable.Animatable2
-import android.graphics.drawable.AnimatedVectorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -28,12 +24,13 @@ import com.stelianmorariu.pawz.presentation.common.loadImage
 import com.stelianmorariu.pawz.presentation.common.loadImageNoCrop
 import com.stelianmorariu.pawz.presentation.common.widgets.GalleryLinearSmoothScroller
 import com.stelianmorariu.pawz.presentation.common.widgets.GridLayoutItemSpaceDecorator
+import com.stelianmorariu.pawz.presentation.common.widgets.PawzLoadingView
 import com.stfalcon.imageviewer.StfalconImageViewer
 import javax.inject.Inject
 
 
 class BreedGalleryActivity : AppCompatActivity(), Injectable,
-    SimpleItemClickListener<Pair<Int, ImageView>> {
+    SimpleItemClickListener<Pair<Int, ImageView>>, PawzLoadingView.PawzLoadingAnimationListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -45,9 +42,6 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
         ViewModelProvider(this, viewModelFactory).get(BreedGalleryViewModel::class.java)
     }
 
-    private var loadingAnimation: AnimatedVectorDrawable? = null
-    private var loading = false
-
     private var breedGalleryAdaper = BreedGalleryAdapter(this)
 
     private var fullscreenImageViewwer: StfalconImageViewer<String>? = null
@@ -57,27 +51,32 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
     // limit the number of times we process breed clicks
     private var canProcessItemClicks = true
 
+    private var unprocessedViewState: BreedGalleryViewState? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        try {
-            currentBreed = intent.getParcelableExtra(BREED)!!
-        } catch (e: Exception) {
+        val parcelableExtra: DogBreed? = intent.getParcelableExtra(BREED)
+        if (parcelableExtra == null) {
             // todo show error message to user
             finish()
+        } else {
+            currentBreed = parcelableExtra
+
+            binding = ActivityBreedGalleryBinding.inflate(layoutInflater)
+            setContentView(binding.root)
+
+            smoothScroller = GalleryLinearSmoothScroller(this)
+
+            initToolbar()
+            initRecyclerView()
+
+            binding.loadingView.pawzLoadingAnimationListener = this
+            viewModel.viewState.observe(this, Observer { viewState ->
+                updateUiState(viewState)
+            })
         }
 
-        binding = ActivityBreedGalleryBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        smoothScroller = GalleryLinearSmoothScroller(this)
-
-        initToolbar()
-        initRecyclerView()
-
-        viewModel.viewState.observe(this, Observer { viewState ->
-            updateUiState(viewState)
-        })
     }
 
     override fun onStart() {
@@ -100,6 +99,10 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
             canProcessItemClicks = false
             showFullScreenImageViewer(positionWithTargetPair)
         }
+    }
+
+    override fun onPawzLoadingAnimationCompleted() {
+        unprocessedViewState?.let { processUiUpdate(it) }
     }
 
     private fun showFullScreenImageViewer(positionWithTargetPair: Pair<Int, ImageView>) {
@@ -139,7 +142,19 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
     }
 
     private fun updateUiState(viewState: BreedGalleryViewState) {
-        stopAnimation()
+        unprocessedViewState = null
+
+        if (binding.loadingView.isLoading) {
+            if (viewState !is LoadingState) {
+                binding.loadingView.stopAnimation()
+                unprocessedViewState = viewState
+            }
+        } else {
+            processUiUpdate(viewState)
+        }
+    }
+
+    private fun processUiUpdate(viewState: BreedGalleryViewState) {
         when (viewState) {
             is ErrorState -> renderErrorState(viewState)
             is LoadingState -> renderLoadingState()
@@ -149,25 +164,23 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
 
     private fun renderBreedImageGallery(viewState: DisplayGalleryState) {
         binding.errorLayout.root.visibility = View.INVISIBLE
-        binding.loadingLayout.root.visibility = View.INVISIBLE
+        binding.loadingView.visibility = View.INVISIBLE
         binding.breedImageRecyclerView.visibility = View.VISIBLE
 
         breedGalleryAdaper.setItems(viewState.images)
     }
 
     private fun renderLoadingState() {
-        loading = true
         binding.breedImageRecyclerView.visibility = View.INVISIBLE
         binding.errorLayout.root.visibility = View.INVISIBLE
-        binding.loadingLayout.root.visibility = View.VISIBLE
+        binding.loadingView.visibility = View.VISIBLE
 
-        loadingAnimation = binding.loadingLayout.loadingIv.drawable as AnimatedVectorDrawable
-        startAnimating()
+        binding.loadingView.startAnimating()
     }
 
     private fun renderErrorState(viewState: ErrorState) {
         binding.breedImageRecyclerView.visibility = View.INVISIBLE
-        binding.loadingLayout.root.visibility = View.INVISIBLE
+        binding.loadingView.visibility = View.INVISIBLE
         binding.errorLayout.root.visibility = View.VISIBLE
 
         binding.errorLayout.imageView.loadImage(viewState.pawzError.imageId)
@@ -179,22 +192,6 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
             binding.errorLayout.errorMessageTv.text = viewState.pawzError.message
         }
 
-    }
-
-    private fun startAnimating() {
-        loadingAnimation?.registerAnimationCallback(object : Animatable2.AnimationCallback() {
-            override fun onAnimationEnd(drawable: Drawable?) {
-                if (loading) {
-                    (drawable as Animatable).start()
-                }
-            }
-        })
-
-        loadingAnimation?.start()
-    }
-
-    private fun stopAnimation() {
-        loadingAnimation?.stop()
     }
 
     private fun initToolbar() {
@@ -222,7 +219,7 @@ class BreedGalleryActivity : AppCompatActivity(), Injectable,
 
     companion object {
 
-        private const val BREED = "com.stelianmorariu.pawz.BREED"
+        const val BREED = "com.stelianmorariu.pawz.BREED"
 
         fun newIntent(context: Context, breed: DogBreed): Intent {
             val intent = Intent(context, BreedGalleryActivity::class.java)

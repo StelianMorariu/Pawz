@@ -7,7 +7,7 @@ This is a simple app that reads and displays data from [https://dog.ceo/dog-api/
 
 ## Code organization
 
-The majority if the projects I worked on included an SDK component, so the code was obviously modularized but in this instance I saw no need to add different modules. As such, the gradle dependencies are added directly in the app module instead of my usual practice of using **buildSrc** to define them.
+The majority of the projects I worked on included an SDK component, so the code was obviously modularized but in this instance I saw no need to add different modules. As such, the gradle dependencies are added directly in the app module instead of my usual practice of using **buildSrc** to define them.
 
 ## CI compatibility
 
@@ -21,7 +21,6 @@ I chose a simple MVVM architecture with deterministic UI states represented by a
 
 For this app it makes it really easy to render the UI and keep track of the current states(empty,error, data).
 
-To save some time I didn't use UseCases or Interactors.
 
 ## Dependency Injection
 
@@ -63,15 +62,26 @@ I chose to map the errors directly in the call adapter factory to save some time
 
 ## Testing
 
-- implemented Unit Tests to check that the ViewModels send the correct ViewStates to the views
-- implemented Unit Test to check that the repository will only emit the expected data or a PawzError
-- implemented Unit Test to check that the custom call adapter factory correctly wraps errors in PawzError(**DogApiServiceTest**)
--  TODO: UI tests
+### Unit tests
 
+Test components in isolation to make sure they have the intended behaviour
+
+- **PawzCallAdapterFactoryTest** -> creates a mock server and tests that the custom call adapter factory correctly returns data or a PawzError
+- **DogBreedRepositoryTest** -> checks that the repository correctly transforms data from retrofit or throws a PawzError
+- **BreedGalleryViewModelTest** -> checks that BreedGalleryViewModel sends correct states to the UI
+- **BreedListViewModelTest** -> checks that BreedListViewModelTest sends corerct states to the UI
+
+
+### Integration tests
+
+Check that the repository, use cases and view models interact correctly and output the expected UI states.
+
+- **BreedsListActivityTest** -> use fake API and check that the activity renders the correct UI states
+- **BreedGalleryActivityTest** -> use fake API and check that the activity renders the correct UI states
 
 ## Improvements
 
-- create a custom view for the loading state so we can encapsulate animation related code
+- <s>create a custom view for the loading state so we can encapsulate animation related code</s>
 - ViewStates for the screens are similar and have duplicate states(loading,error), look into extracting some base state class
 - take advantage of the splashscreen to pre-fetch the list of breeds and download a random image for every breed to use as a cover image
 

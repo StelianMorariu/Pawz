@@ -72,9 +72,8 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="28dp" />
 
-    <include
-        android:id="@+id/loadingLayout"
-        layout="@layout/layout_loading_state"
+    <com.stelianmorariu.pawz.presentation.common.widgets.PawzLoadingView
+        android:id="@+id/loadingView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
