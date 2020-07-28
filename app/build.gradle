@@ -17,7 +17,7 @@ android {
         versionCode Integer.parseInt(project.property('project.buildnumber'))
         versionName project.property('project.buildversion')
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.stelianmorariu.pawz.PawzTestRunner"
     }
 
     sourceSets {
@@ -107,17 +107,23 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation "com.squareup.okhttp3:mockwebserver:3.10.0"
 
-    testCompile("android.arch.core:core-testing:1.1.0", {
+    testImplementation("android.arch.core:core-testing:1.1.0", {
         exclude group: 'com.android.support', module: 'support-compat'
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
 
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.3.0-rc01"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.3.0-rc01"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:3.3.0-rc01"
+    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:3.3.0-rc01"
+    implementation "androidx.test.espresso:espresso-idling-resource:3.3.0-rc01"
+
+    kaptAndroidTest 'com.google.dagger:dagger-compiler:2.22.1'
     kaptTest 'com.google.dagger:dagger-compiler:2.22.1'
     testImplementation 'io.mockk:mockk:1.9.3'
 

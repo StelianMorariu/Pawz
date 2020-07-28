@@ -8,6 +8,7 @@ import android.app.Application
 import com.stelianmorariu.pawz.domain.PawzConfig
 import com.stelianmorariu.pawz.domain.dagger.modules.AppActivityContributorModule
 import com.stelianmorariu.pawz.domain.dagger.modules.AppViewModelsModule
+import com.stelianmorariu.pawz.domain.dagger.modules.PawzApiModule
 import com.stelianmorariu.pawz.domain.dagger.modules.PawzAppModule
 import com.stelianmorariu.pawz.domain.scheduler.SchedulersProvider
 import com.stelianmorariu.pawz.presentation.PawzApp
@@ -24,6 +25,7 @@ import javax.inject.Singleton
 @Component(
     modules = [
         PawzAppModule::class,
+        PawzApiModule::class,
         AppViewModelsModule::class,
         AppActivityContributorModule::class,
         AndroidInjectionModule::class,
