@@ -31,7 +31,7 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 
 
-class DogApiServiceTest {
+class PawzCallAdapterFactoryTest {
 
     private var mockWebServer = MockWebServer()
     private var connectionChecker: FakeConnectionChecker = mock()
