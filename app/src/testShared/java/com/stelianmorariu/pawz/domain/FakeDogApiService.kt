@@ -11,12 +11,22 @@ import com.stelianmorariu.pawz.domain.errors.PawzServerError
 import io.reactivex.Single
 import java.net.UnknownHostException
 
+/**
+ * Fake implementation of [DogApiService].
+ *
+ * In production code errors are managed via [PawzCallAdapterFactory] but for simplicity
+ * that behaviour is emulated directly in this implementation.
+ *
+ * The purpose of this implementation is to provide some sample data for tests without hitting the network
+ */
 class FakeDogApiService : DogApiService {
 
     var throwNoInternetError: Boolean = false
     var throwServerError: Boolean = false
     var throwNoDataError: Boolean = false
+    var hasInternet: Boolean = true
 
+    // the list of breeds and sub-breeds as it's being sent by the API
     val breedsMap: Map<String, List<String>> = mapOf(
         "affenpinscher" to emptyList(),
         "african" to emptyList(),
@@ -35,28 +45,59 @@ class FakeDogApiService : DogApiService {
         "buhund" to listOf("norwegian")
     )
 
-    override fun getAllBreads(): Single<DogApiResponseDto<Map<String, List<String>>>> {
-        return if (throwNoDataError) {
-            Single.just(DogApiResponseDto(emptyMap(), DogApiResponseDto.STATUS_SUCCESS))
-        } else if (throwServerError) {
-            Single.error(PawzServerError("Server error", 500, RuntimeException("test")))
+    // list of images, same images returned for all breeds and sub-breeds
+    val imageList: List<String> = listOf(
+        "https://images.dog.ceo/breeds/terrier-tibetan/n02097474_7834.jpg",
+        "https://images.dog.ceo/breeds/malinois/n02105162_6116.jpg",
+        "https://images.dog.ceo/breeds/dingo/n02115641_11220.jpg",
+        "https://images.dog.ceo/breeds/pyrenees/n02111500_1879.jpg",
+        "https://images.dog.ceo/breeds/dane-great/n02109047_2009.jpg",
+        "https://images.dog.ceo/breeds/pointer-germanlonghair/hans1.jpg"
+    )
 
-        } else if (throwNoInternetError) {
-            Single.error(PawzNoInternetError(UnknownHostException("thron from test")))
-        } else {
-            Single.just(DogApiResponseDto(breedsMap, DogApiResponseDto.STATUS_SUCCESS))
+    override fun getAllBreads(): Single<DogApiResponseDto<Map<String, List<String>>>> {
+        return when {
+            throwNoDataError -> {
+                Single.just(DogApiResponseDto(emptyMap(), DogApiResponseDto.STATUS_SUCCESS))
+            }
+            throwServerError -> {
+                Single.error(PawzServerError("Server error", 500, RuntimeException("test")))
+
+            }
+            throwNoInternetError -> {
+                Single.error(PawzNoInternetError(UnknownHostException("thron from test")))
+            }
+            else -> {
+                Single.just(DogApiResponseDto(breedsMap, DogApiResponseDto.STATUS_SUCCESS))
+            }
         }
 
     }
 
     override fun getBreedImageList(breed: String): Single<DogApiResponseDto<List<String>>> {
-        TODO("Not yet implemented")
+        return when {
+            throwNoDataError -> {
+                Single.just(DogApiResponseDto(listOf(), DogApiResponseDto.STATUS_SUCCESS))
+            }
+            throwServerError -> {
+                Single.error(PawzServerError("Server error", 500, RuntimeException("test")))
+
+            }
+            throwNoInternetError -> {
+                Single.error(PawzNoInternetError(UnknownHostException("thron from test")))
+            }
+            else -> {
+                Single.just(DogApiResponseDto(imageList, DogApiResponseDto.STATUS_SUCCESS))
+            }
+        }
     }
 
     override fun getSubBreedImageList(
         breed: String,
         subBreed: String
     ): Single<DogApiResponseDto<List<String>>> {
-        TODO("Not yet implemented")
+        return getBreedImageList(breed)
     }
+
+
 }
