@@ -38,6 +38,7 @@ class BreedsListActivityTest {
         fakeDogApiService.throwNoDataError = false
         fakeDogApiService.throwNoInternetError = false
         fakeDogApiService.throwServerError = false
+        fakeDogApiService.throwGenericError = false
 
     }
 
@@ -115,5 +116,20 @@ class BreedsListActivityTest {
         // server error message is "Server error"
         Espresso.onView(withId(R.id.errorMessageTv))
             .check(ViewAssertions.matches(ViewMatchers.withText("Server error")))
+    }
+
+    @Test
+    fun generic_error_is_displayed_on_screen() {
+        fakeDogApiService.throwGenericError = true
+
+        val activityScenario = ActivityScenario.launch(BreedsListActivity::class.java)
+
+        // check that empty view state is displayed
+        Espresso.onView(withId(R.id.errorLayout))
+            .check(ViewAssertions.matches(isDisplayed()))
+
+        // server error message is "Server error"
+        Espresso.onView(withId(R.id.errorMessageTv))
+            .check(ViewAssertions.matches(ViewMatchers.withText(R.string.err_default_msg)))
     }
 }

@@ -6,6 +6,7 @@ package com.stelianmorariu.pawz.domain
 
 import com.stelianmorariu.pawz.data.network.DogApiResponseDto
 import com.stelianmorariu.pawz.data.network.DogApiService
+import com.stelianmorariu.pawz.domain.errors.PawzGenericError
 import com.stelianmorariu.pawz.domain.errors.PawzNoInternetError
 import com.stelianmorariu.pawz.domain.errors.PawzServerError
 import io.reactivex.Single
@@ -23,8 +24,8 @@ class FakeDogApiService : DogApiService {
 
     var throwNoInternetError: Boolean = false
     var throwServerError: Boolean = false
+    var throwGenericError: Boolean = false
     var throwNoDataError: Boolean = false
-    var hasInternet: Boolean = true
 
     // the list of breeds and sub-breeds as it's being sent by the API
     val breedsMap: Map<String, List<String>> = mapOf(
@@ -62,10 +63,12 @@ class FakeDogApiService : DogApiService {
             }
             throwServerError -> {
                 Single.error(PawzServerError("Server error", 500, RuntimeException("test")))
-
+            }
+            throwGenericError -> {
+                Single.error(PawzGenericError(RuntimeException("test")))
             }
             throwNoInternetError -> {
-                Single.error(PawzNoInternetError(UnknownHostException("thron from test")))
+                Single.error(PawzNoInternetError(UnknownHostException("thrown from test")))
             }
             else -> {
                 Single.just(DogApiResponseDto(breedsMap, DogApiResponseDto.STATUS_SUCCESS))
@@ -81,10 +84,12 @@ class FakeDogApiService : DogApiService {
             }
             throwServerError -> {
                 Single.error(PawzServerError("Server error", 500, RuntimeException("test")))
-
+            }
+            throwGenericError -> {
+                Single.error(PawzGenericError(RuntimeException("test")))
             }
             throwNoInternetError -> {
-                Single.error(PawzNoInternetError(UnknownHostException("thron from test")))
+                Single.error(PawzNoInternetError(UnknownHostException("thrown from test")))
             }
             else -> {
                 Single.just(DogApiResponseDto(imageList, DogApiResponseDto.STATUS_SUCCESS))
