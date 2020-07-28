@@ -33,7 +33,7 @@ class TestPawzAppModule() {
 
     @Provides
     @Singleton
-    fun provideConnectivityChecker(context: Context): PawzConnectionChecker =
+    fun provideConnectivityChecker(): PawzConnectionChecker =
         FakeConnectionChecker()
 
 
