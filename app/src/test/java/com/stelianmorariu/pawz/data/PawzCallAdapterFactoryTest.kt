@@ -105,7 +105,7 @@ class PawzCallAdapterFactoryTest {
     fun `check that factory returns no internet error for ConnectException when no internet`() {
 
         val response = MockResponse()
-            .setSocketPolicy(SocketPolicy.DISCONNECT_AT_START)
+            .setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST)
 
 
         whenever(connectionChecker.isConnected())
@@ -127,7 +127,7 @@ class PawzCallAdapterFactoryTest {
     fun `check that factory returns generic error for ConnectException when we have internet`() {
 
         val response = MockResponse()
-            .setSocketPolicy(SocketPolicy.DISCONNECT_AT_START)
+            .setSocketPolicy(SocketPolicy.DISCONNECT_AFTER_REQUEST)
 
 
         whenever(connectionChecker.isConnected())
