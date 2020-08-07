@@ -15,6 +15,8 @@ I use *gradle.properties* to define custom properties for variables that can cha
 
 These properties are wrapped inside a configuration object that can be injected where it's necessary.
 
+This app is using Bitrise.
+
 ## Architecture
 
 I chose a simple MVVM architecture with deterministic UI states represented by a specific [ViewState]().
