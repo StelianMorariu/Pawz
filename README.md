@@ -1,4 +1,4 @@
-# <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" width="32" height="32"/> Pawz 
+# <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" width="32" height="32"/> Pawz <img src="https://app.bitrise.io/app/e633653f17c0786a/status.svg?token=bboEjqMWKYAwrSuSlmv4PA"/>
 
 
 <img src="art/app_demo.gif" width="200" height="400" />
