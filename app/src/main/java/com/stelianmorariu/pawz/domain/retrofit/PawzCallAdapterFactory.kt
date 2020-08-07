@@ -21,8 +21,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import timber.log.Timber
 import java.lang.reflect.Type
-import java.net.ConnectException
-import java.net.UnknownHostException
 
 /**
  * Custom call adapter factory that intercepts errors and converts
@@ -84,10 +82,8 @@ class PawzCallAdapterFactory(
         private fun getAsPawzRetrofitException(throwable: Throwable): PawzError =
             when (throwable) {
                 // todo : gson parsing exceptions
-                is UnknownHostException -> getServerOrInternetError(throwable)
-                is ConnectException -> getServerOrInternetError(throwable)
                 is HttpException -> getCheckedServerException(throwable)
-                else -> PawzGenericError(throwable)
+                else -> getServerOrInternetError(throwable)
             }
 
         private fun getCheckedServerException(throwable: HttpException): PawzError {
@@ -104,6 +100,10 @@ class PawzCallAdapterFactory(
 
         }
 
+        /**
+         * Catches different exception types that can be thrown when there is no internet connection.
+         * Ie: [java.net.UnknownHostException], [java.net.ConnectException], [java.io.IOException]
+         */
         private fun getServerOrInternetError(throwable: Throwable): PawzError {
             return if (connectionChecker.isConnected()) {
                 PawzGenericError(throwable)
